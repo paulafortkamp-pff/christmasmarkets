@@ -1,0 +1,574 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Christmas Market Finder</title>
+<meta name="description" content="Christmas Market Finder by The Traveling Taste – markets around Luxembourg, Germany and France.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<style>
+/* Layout: light winter page with Christmas red and pine green. Candy-cane ribbon on top, search panel, results split into
+   "only a few days" and "open all season", month calendar, weekend routes, suggestion band. One column on phones.
+   Cards read like market-stall signs: a tinted header (red for short runs, green for all season) over a pale-mint body. */
+:root {
+  --bg: #1F3D2B;         /* deep pine ground */
+  --on-bg: #F2F7F3; --on-bg-soft: #BCD3C3; --on-bg-red: #FFB3B9; --on-bg-green: #A6E3BE; --bg-line: #3A5C47;
+  --surface: #E3EFE6;    /* soft mint cards and panels */
+  --surface-2: #D2E5D8; --line: #A8C6B2;
+  --ink: #12261A; --ink-soft: #46604F;
+  --red: #B8222E; --red-ink: #A11C27; --red-soft: #F1CDD0;
+  --green: #1E6B43; --green-ink: #185A37; --green-soft: #BFDACA;
+  --gold-ink: #7A4F00; --gold-soft: #FBEBC5;
+  --on-accent: #FFFFFF; --sel-bg: #FBE3E4;
+  --shadow: 0 1px 2px rgba(18, 38, 26, .06), 0 8px 22px rgba(18, 38, 26, .08);
+  --display: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--on-bg); font: 16px/1.5 var(--body); }
+a { color: var(--green-ink); }
+a:hover { color: var(--red-ink); }
+footer a:hover { color: var(--on-bg); }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.ribbon { height: 8px; background: repeating-linear-gradient(135deg, var(--red) 0 14px, var(--surface) 14px 18px, var(--green) 18px 32px, var(--surface) 32px 36px); }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { padding-block: 18px; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
+.brand { display: flex; flex-direction: column; text-decoration: none; color: var(--on-bg); }
+.brand b { font: 400 26px/1.1 var(--display); }
+.brand span { font-size: 13px; color: var(--on-bg-soft); letter-spacing: .03em; }
+.head-right { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.ig { font-weight: 600; font-size: 14px; text-decoration: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 10px 14px; color: var(--ink); }
+.ig:hover { border-color: var(--green); color: var(--green-ink); }
+.langs { display: flex; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; overflow: hidden; }
+.langs button { background: transparent; color: var(--ink); border: 0; padding: 10px 13px; min-width: 44px; font: 600 14px var(--body); cursor: pointer; }
+.langs button[aria-pressed="true"] { background: var(--red); color: var(--on-accent); }
+.hero { padding-block: 26px 8px; display: flex; flex-direction: column; gap: 12px; }
+.eyebrow { margin: 0; color: var(--on-bg-green); font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+h1 { margin: 0; font: 400 clamp(36px, 6vw, 64px)/1.03 var(--display); text-wrap: balance; max-width: 18ch; }
+h1 em { font-style: italic; color: #FF6170; }
+.lede { margin: 0; color: var(--on-bg-soft); max-width: 60ch; font-size: 17px; }
+.panel { color: var(--ink); margin-top: 18px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 16px; }
+.quick { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; font: 500 15px var(--body); cursor: pointer; min-height: 44px; }
+.chip:hover { border-color: var(--green); }
+.chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: var(--on-accent); font-weight: 600; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+input, select { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font: 16px var(--body); width: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.checks { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.checks label { display: flex; gap: 8px; align-items: center; font-size: 15px; cursor: pointer; min-height: 32px; }
+.checks input { width: 18px; height: 18px; accent-color: var(--green); }
+section { padding-block: 30px; }
+.sec-head { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+h2 { margin: 0; font: 400 clamp(28px, 4vw, 38px)/1.1 var(--display); text-wrap: balance; }
+.count { margin: 0; color: var(--on-bg-soft); font-size: 15px; font-variant-numeric: tabular-nums; }
+.group { display: flex; flex-direction: column; gap: 12px; }
+.group + .group { margin-top: 28px; }
+.group-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.group-h h3 { margin: 0; font: 700 13px var(--body); letter-spacing: .12em; text-transform: uppercase; }
+.group-h.short h3 { color: var(--on-bg-red); }
+.group-h.season h3 { color: var(--on-bg-green); }
+.group-h p { margin: 0; color: var(--on-bg-soft); font-size: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+@media (max-width: 420px) { .grid { grid-template-columns: 1fr; } }
+.card { color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; overflow: hidden; box-shadow: var(--shadow); }
+.card-top { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; margin: -18px -18px 0; padding: 16px 18px 14px; border-bottom: 1px solid var(--line); }
+.card.is-short .card-top { background: var(--red-soft); }
+.card.is-season .card-top { background: var(--green-soft); }
+.card.is-short .meta { color: #5A3A3E; }
+.card h3 { margin: 0; font: 400 23px/1.15 var(--display); }
+.stamp { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 54px; padding: 6px 8px; border-radius: 10px; background: var(--red); color: var(--on-accent); line-height: 1.05; text-align: center; }
+.stamp b { font: 400 24px var(--display); }
+.stamp span { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.meta { margin: 0; color: var(--ink-soft); font-size: 14px; display: flex; align-items: flex-start; gap: 8px; }
+.meta .flag { margin-top: 3px; }
+.meta span { flex: 1 1 auto; min-width: 0; }
+.flag { width: 24px; height: 16px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.15); flex: none; display: block; }
+.when { margin: 0; font-size: 14px; }
+.when strong { font-weight: 600; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { border-radius: 999px; padding: 4px 10px; font-size: 12.5px; font-weight: 600; background: var(--surface-2); color: var(--ink); }
+.badge.short { background: var(--red); color: var(--on-accent); }
+.badge.go { background: var(--green-soft); color: var(--green-ink); }
+.badge.warn { background: var(--gold-soft); color: var(--gold-ink); }
+.badge.no { background: var(--red-soft); color: var(--red-ink); }
+.badge.visited { background: var(--gold-soft); color: var(--gold-ink); border: 1px solid var(--gold-ink); }
+.why { margin: 0; font-size: 15px; }
+.food { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+.food b { display: block; color: var(--green-ink); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.addr { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: auto; }
+.actions .btn { padding: 8px 4px; font-size: 13.5px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 13px; border-radius: 10px; font: 600 14px var(--body); text-decoration: none; border: 1px solid var(--line); color: var(--ink); background: var(--surface); cursor: pointer; white-space: nowrap; }
+.btn:hover { border-color: var(--green); color: var(--green-ink); }
+.btn.primary { background: var(--red); color: var(--on-accent); border-color: var(--red); }
+.btn.primary:hover { background: var(--red-ink); color: var(--on-accent); }
+.btn.green { background: var(--green); color: var(--on-accent); border-color: var(--green); }
+.btn.green:hover { background: var(--green-ink); color: var(--on-accent); }
+.btn:disabled { opacity: .4; cursor: default; }
+.empty { color: var(--ink); background: var(--surface); border: 1px dashed var(--line); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.empty p { margin: 0; }
+.routes { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.route { color: var(--ink); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.route.past { opacity: .55; }
+.route .rwhen { margin: 0; color: var(--red-ink); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.route h3 { margin: 0; font: 400 22px/1.15 var(--display); }
+.route p { margin: 0; font-size: 15px; }
+.route .stops { display: flex; flex-wrap: wrap; gap: 6px; }
+.route .stop { display: inline-flex; gap: 6px; align-items: center; background: var(--surface-2); border-radius: 999px; padding: 4px 10px 4px 6px; font-size: 13px; }
+.route .stop .flag { width: 18px; height: 12px; }
+.route .base { color: var(--ink-soft); font-size: 14px; }
+.cal-nav { display: flex; gap: 8px; }
+.cal-scroll { overflow-x: auto; }
+.cal { min-width: 700px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.dow { font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--on-bg-soft); padding: 4px 6px; text-transform: uppercase; }
+.day { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px; min-height: 96px; display: flex; flex-direction: column; gap: 4px; text-align: left; color: var(--ink); font: 14px var(--body); cursor: pointer; }
+.day.out { visibility: hidden; }
+.day.none { opacity: .7; }
+.day:hover { border-color: var(--green); }
+.day[aria-pressed="true"] { border: 2px solid var(--red); background: var(--sel-bg); }
+.day .n { display: flex; justify-content: space-between; font-weight: 700; font-variant-numeric: tabular-nums; }
+.day .n small { font-weight: 700; color: var(--green-ink); }
+.day .tag { background: var(--red-soft); color: var(--red-ink); border-radius: 5px; padding: 2px 5px; font-size: 11.5px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legend { margin: 12px 0 0; color: var(--on-bg-soft); font-size: 14px; max-width: 75ch; }
+.suggest { background: var(--red); color: var(--on-accent); border-radius: 20px; padding: 26px; display: flex; flex-wrap: wrap; gap: 18px 28px; align-items: center; justify-content: space-between; }
+.suggest > div { display: flex; flex-direction: column; gap: 8px; max-width: 62ch; min-width: 0; }
+.suggest h2 { color: var(--on-accent); }
+.suggest p { margin: 0; }
+.suggest .btn { background: var(--surface); border-color: var(--surface); color: var(--red-ink); font-size: 16px; padding: 14px 22px; }
+footer { border-top: 1px solid var(--bg-line); }
+footer .wrap { padding-block: 28px 40px; display: flex; flex-wrap: wrap; gap: 14px 24px; justify-content: space-between; align-items: flex-start; }
+footer p { margin: 0; font-size: 14px; color: var(--on-bg-soft); }
+footer a { color: var(--on-bg-green); }
+footer b { font: 400 22px var(--display); color: var(--on-bg); }
+@media (prefers-reduced-motion: no-preference) { .card, .route, .day { transition: border-color .15s; } }
+</style>
+</head>
+<body>
+
+
+<div class="ribbon" aria-hidden="true"></div>
+<header class="wrap top">
+  <a class="brand" href="#top"><b>The Traveling Taste</b><span>by Paula Fortkamp Frigo</span></a>
+  <div class="head-right"><a class="ig" id="ig-head" target="_blank" rel="noopener">@the.traveling.taste</a>
+  <div class="langs" role="group" aria-label="Language" id="langs">
+    <button type="button" data-lang="en">EN</button><button type="button" data-lang="pt">PT</button><button type="button" data-lang="fr">FR</button><button type="button" data-lang="de">DE</button>
+  </div></div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <p class="eyebrow" data-t="eyebrow"></p>
+    <h1 id="h1"></h1>
+    <p class="lede" data-t="lede"></p>
+    <div class="panel">
+      <div class="quick" role="group" aria-label="When" id="quick">
+        <button type="button" class="chip" data-q="today" data-t="today"></button>
+        <button type="button" class="chip" data-q="weekend" data-t="weekend"></button>
+        <button type="button" class="chip" data-q="nextweekend" data-t="nextweekend"></button>
+      </div>
+      <div class="fields">
+        <div class="field"><label for="f-date" data-t="pickDate"></label><input id="f-date" type="date" min="2026-11-01" max="2027-01-31"></div>
+        <div class="field"><label for="f-travel" data-t="travel"></label>
+          <select id="f-travel"><option value="60"></option><option value="120"></option><option value="180" selected></option><option value="any"></option></select></div>
+        <div class="field"><label for="f-country" data-t="country"></label><select id="f-country"></select></div>
+      </div>
+      <fieldset class="checks"><legend class="sr" data-t="filters"></legend>
+        <label><input type="checkbox" id="f-short"><span data-t="fShort"></span></label>
+        <label><input type="checkbox" id="f-train"><span data-t="fTrain"></span></label>
+        <label><input type="checkbox" id="f-indoor"><span data-t="fIndoor"></span></label>
+      </fieldset>
+    </div>
+  </div>
+
+  <section class="wrap" aria-labelledby="res-h">
+    <div class="sec-head"><h2 id="res-h"></h2><p class="count" id="res-count"></p></div>
+    <div id="results"></div>
+  </section>
+
+  <section class="wrap" aria-labelledby="cal-h">
+    <div class="sec-head"><h2 id="cal-h"></h2>
+      <div class="cal-nav"><button type="button" class="btn" id="cal-prev"></button><button type="button" class="btn" id="cal-next"></button></div></div>
+    <div class="cal-scroll"><div class="cal" id="cal"></div></div>
+    <p class="legend" data-t="calLegend"></p>
+  </section>
+
+  <section class="wrap" aria-labelledby="rt-h">
+    <div class="sec-head"><h2 id="rt-h" data-t="routesTitle"></h2><p class="count" data-t="routesSub"></p></div>
+    <div class="routes" id="routes"></div>
+  </section>
+
+  <section class="wrap" aria-labelledby="sug-h">
+    <div class="suggest">
+      <div><h2 id="sug-h" data-t="sugTitle"></h2><p data-t="sugText"></p></div>
+      <a class="btn" id="sug-btn" target="_blank" rel="noopener"></a>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <div style="display:flex;flex-direction:column;gap:4px"><b>The Traveling Taste</b><p>by Paula Fortkamp Frigo · <a id="ig-foot" target="_blank" rel="noopener">@the.traveling.taste</a></p></div>
+  <p style="max-width:60ch" data-t="disclaimer"></p>
+</div></footer>
+
+<script>
+const MARKETS = [{"id": "vianden", "name": "Vianden – Veiner Krëstmoort", "link": "https://www.visit-vianden.lu/en/agenda/veiner-kresmoort/", "country": "Luxembourg", "town": "Vianden", "address": "Place Vic Abens, Vianden", "lat": 49.935, "lng": 6.208, "travel_text": "45 min", "travel_min": 45.0, "dates_text": "28/11, 14h–19h", "open_periods": "2026-11-28", "open_days": "Daily", "closed_dates": "", "hours": "14:00–19:00", "date_status": "Confirmed", "short_run": "One day only", "by_public_transport": "Yes (bus)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "One-day market at the foot of the illuminated castle. Take the bus: parking fills up fast.", "highlight_pt": "Aos pés do castelo iluminado; formato de um dia só. Vá de ônibus: o estacionamento lota.", "highlight_fr": "Marché d'un seul jour au pied du château illuminé. Venez en bus : le parking sature vite.", "highlight_de": "Eintägiger Markt am Fuß der beleuchteten Burg. Lieber mit dem Bus kommen: Parkplätze sind schnell voll.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "clervaux", "name": "Clervaux – Cliärrwer Chrëschtmaart", "link": "https://www.visit-clervaux.lu/en/local/events/event/2026/12/13/cliaerrwer-chreschtmaart", "country": "Luxembourg", "town": "Clervaux", "address": "Grand-Rue, Clervaux", "lat": 50.054, "lng": 6.031, "travel_text": "50 min", "travel_min": 50.0, "dates_text": "13/12, 11h–18h", "open_periods": "2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "11:00–18:00", "date_status": "Confirmed", "short_run": "One day only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Small market below the castle, with an Ardennes feel.", "highlight_pt": "Pequena, sob o castelo, clima de Ardenas.", "highlight_fr": "Petit marché sous le château, ambiance ardennaise.", "highlight_de": "Kleiner Markt unterhalb der Burg, mit Ardennen-Flair.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "echternach", "name": "Echternach", "link": "https://marches-de-noel.fr/en/christmas-markets/echternach/", "country": "Luxembourg", "town": "Echternach", "address": "Place du Marché, 6460 Echternach", "lat": 49.812, "lng": 6.418, "travel_text": "35 min", "travel_min": 35.0, "dates_text": "11 a 13 de dez", "open_periods": "2026-12-11 to 2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Stalls around the basilica and the illuminated abbey of Luxembourg's oldest town.", "highlight_pt": "Barracas em volta da basílica e da abadia iluminada.", "highlight_fr": "Chalets autour de la basilique et de l'abbaye illuminée.", "highlight_de": "Stände rund um die Basilika und die beleuchtete Abtei.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "grevenmacher", "name": "Grevenmacher – Chrëschtmoart zu Maacher", "link": "https://www.visitluxembourg.com/fr/evenement/chrestmoart-zu-maacher-1", "country": "Luxembourg", "town": "Grevenmacher", "address": "Place du Marché, Grevenmacher", "lat": 49.68, "lng": 6.441, "travel_text": "30 min", "travel_min": 30.0, "dates_text": "Sábado, 12/12, 12h–20h", "open_periods": "2026-12-12", "open_days": "Daily", "closed_dates": "", "hours": "12:00–20:00", "date_status": "Confirmed", "short_run": "One day only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A very local one-day market on the Moselle.", "highlight_pt": "Feirinha de um dia na Mosela, bem local.", "highlight_fr": "Petit marché d'un jour sur la Moselle, très local.", "highlight_de": "Eintägiger, sehr lokaler Markt an der Mosel.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "noertrange", "name": "Noertrange (Wiltz)", "link": "https://www.visitluxembourg.com/fr/evenement/marche-de-noel-2026", "country": "Luxembourg", "town": "Noertrange", "address": "6, Op der Louh, L-9676 Noertrange", "lat": 49.976, "lng": 5.919, "travel_text": "1h", "travel_min": 60.0, "dates_text": "Sábado, 21/11, 16h–23h45", "open_periods": "2026-11-21", "open_days": "Daily", "closed_dates": "", "hours": "16:00–23:45", "date_status": "Confirmed", "short_run": "One day only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "An evening village market, almost no tourists.", "highlight_pt": "Mercado de vilarejo noturno, quase sem turistas.", "highlight_fr": "Marché de village en soirée, presque sans touristes.", "highlight_de": "Abendlicher Dorfmarkt, kaum Touristen.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "remich", "name": "Remich – Wanterfestival & Handwierkschrëschtmoart", "link": "https://visitremich.lu/en/agenda/2_wanterfestival-handwierkschreschtmoart-3-3/", "country": "Luxembourg", "town": "Remich", "address": "Esplanade, Remich (Moselle riverside)", "lat": 49.545, "lng": 6.367, "travel_text": "30 min", "travel_min": 30.0, "dates_text": "28 e 29.11, 05 e 06.12, 12 e 13.12", "open_periods": "2026-11-28 to 2026-11-29; 2026-12-05 to 2026-12-06; 2026-12-12 to 2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "Weekends only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Craft market and street food with an ice rink on the Moselle; Christmas choir on 5 December.", "highlight_pt": "Feira artesanal e street food com pista de patinação e um coral de Natal no dia 5 de dezembro.", "highlight_fr": "Marché artisanal et street food avec patinoire au bord de la Moselle ; chorale de Noël le 5 décembre.", "highlight_de": "Kunsthandwerk und Streetfood mit Eisbahn an der Mosel; Weihnachtschor am 5. Dezember.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "winterlights", "name": "Winterlights, Luxembourg City", "link": "https://www.info-lux.com/?p=1702614", "country": "Luxembourg", "town": "Luxembourg City", "address": "Place d'Armes, Place de la Constitution, Place de Paris, Place Guillaume II – Luxembourg", "lat": 49.611, "lng": 6.13, "travel_text": "—", "travel_min": 0.0, "dates_text": "20/11/2026 a 3/1/2027", "open_periods": "2026-11-20 to 2027-01-03", "open_days": "Daily", "closed_dates": "2026-12-25", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "The capital's markets. Go on a weekday to avoid the crowds.", "highlight_pt": "A da cidade; vá em dia de semana para fugir do movimento.", "highlight_fr": "Les marchés de la capitale. Allez-y en semaine pour éviter la foule.", "highlight_de": "Die Märkte der Hauptstadt. Am besten unter der Woche, dann ist es ruhiger.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "betzdorf", "name": "Betzder Chrëschtmaart", "link": "https://www.visitmoselle.lu/event/betzder-chreschtmaart-2026", "country": "Luxembourg", "town": "Roodt-sur-Syre (Betzdorf)", "address": "Syrkus, 20 Route de Luxembourg, L-6910 Roodt-sur-Syre", "lat": 49.666, "lng": 6.3, "travel_text": "25 min", "travel_min": 25.0, "dates_text": "27 a 29 dez", "open_periods": "2026-11-27 to 2026-11-29", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "To confirm", "short_run": "One weekend", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A small community market in the Syre valley.", "highlight_pt": "Feirinha comunitária no vale do Syre.", "highlight_fr": "Petit marché communal dans la vallée de la Syre.", "highlight_de": "Kleiner Gemeindemarkt im Syretal.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "wincheringen", "name": "Wincheringen (Obermosel)", "link": "https://www.festivalsindeutschland.de/festival/wincheringen-marche-de-noel", "country": "Germany", "town": "Wincheringen", "address": "", "lat": 49.607, "lng": 6.42, "travel_text": "30 min", "travel_min": 30.0, "dates_text": "12–13/12", "open_periods": "2026-12-12 to 2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Village market with Upper Moselle wines, just over the border.", "highlight_pt": "Feirinha de vilarejo com vinhos da Alta Mosela, logo após a fronteira.", "highlight_fr": "Marché de village avec les vins de la Haute-Moselle, juste après la frontière.", "highlight_de": "Dorfmarkt mit Obermosel-Weinen, direkt hinter der Grenze.", "food_en": "Glühwein made with Upper Moselle wines", "food_pt": "Glühwein feito com vinhos da Alta Mosela", "food_fr": "Vin chaud aux vins de la Haute-Moselle", "food_de": "Glühwein aus Obermosel-Weinen", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "saarburg", "name": "Saarburg – Christkindlmarkt", "link": "https://www.festivalsindeutschland.de/festival/saarburger-christkindlmarkt", "country": "Germany", "town": "Saarburg", "address": "Buttermarkt, Am Markt, 54439 Saarburg", "lat": 49.609, "lng": 6.549, "travel_text": "40 min", "travel_min": 40.0, "dates_text": "5 a 7 de dez e 12 a 13 de dez", "open_periods": "2026-12-04 to 2026-12-06; 2026-12-11 to 2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "Fri 15:00–21:00; Sat–Sun 13:00–21:00", "date_status": "To confirm", "short_run": "Two weekends", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A lit tree above the waterfall in the town centre: one of the most photogenic markets in the region.", "highlight_pt": "Árvore iluminada sobre a cachoeira no centro da cidade; uma das mais fotogênicas da região.", "highlight_fr": "Un sapin illuminé au-dessus de la cascade en plein centre : l'un des marchés les plus photogéniques de la région.", "highlight_de": "Beleuchteter Baum über dem Wasserfall mitten in der Stadt: einer der fotogensten Märkte der Region.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "traben-trarbach", "name": "Traben-Trarbach – Mosel-Wein-Nachts-Markt", "link": "https://www.mosel-wein-nachts-markt.de/", "country": "Germany", "town": "Traben-Trarbach", "address": "Historische Weinkeller, 56841 Traben-Trarbach", "lat": 49.951, "lng": 7.116, "travel_text": "1h15", "travel_min": 75.0, "dates_text": "20/11/2026 a 2/1/2027, só fins de semana e dias especiais", "open_periods": "2026-11-20 to 2027-01-02", "open_days": "Fri, Sat, Sun", "closed_dates": "", "hours": "", "date_status": "To confirm", "short_run": "", "by_public_transport": "", "tickets": "Entry €5.50", "dogs": "", "indoor": "Yes", "kids": "", "highlight_en": "Germany's only underground Christmas market, inside 16th-century wine cellars.", "highlight_pt": "Única feira subterrânea da Alemanha, dentro de adegas do século 16.", "highlight_fr": "Le seul marché de Noël souterrain d'Allemagne, dans des caves à vin du XVIe siècle.", "highlight_de": "Deutschlands einziger unterirdischer Weihnachtsmarkt, in Weinkellern aus dem 16. Jahrhundert.", "food_en": "Riesling and Glühwein in the cellars", "food_pt": "Riesling e Glühwein dentro das adegas", "food_fr": "Riesling et vin chaud dans les caves", "food_de": "Riesling und Glühwein in den Kellern", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "bernkastel-kues", "name": "Bernkastel-Kues", "link": "https://www.festivalsindeutschland.de/festival/weihnachtsmarkt-bernkastel-kues", "country": "Germany", "town": "Bernkastel-Kues", "address": "Marktplatz, 54470 Bernkastel-Kues", "lat": 49.916, "lng": 7.069, "travel_text": "1h", "travel_min": 60.0, "dates_text": "20/11 a 20/12 (todos os dias), 11h–19h, sex e sáb 11h–21h", "open_periods": "2026-11-20 to 2026-12-20", "open_days": "Daily", "closed_dates": "", "hours": "Sun–Thu 11:00–19:00; Fri–Sat 11:00–21:00", "date_status": "Confirmed", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "50th edition in 2026, about 40 stalls in the medieval centre. Pairs with Traben-Trarbach on the same day.", "highlight_pt": "50ª edição em 2026, cerca de 40 barracas no centro medieval. Combina com Traben-Trarbach no mesmo dia.", "highlight_fr": "50e édition en 2026, une quarantaine de stands dans le centre médiéval. À combiner avec Traben-Trarbach.", "highlight_de": "50. Ausgabe 2026, rund 40 Stände in der mittelalterlichen Altstadt. Gut mit Traben-Trarbach kombinierbar.", "food_en": "Glühwein made from regional Rieslings", "food_pt": "Glühwein feito de Rieslings da região", "food_fr": "Vin chaud au Riesling de la région", "food_de": "Glühwein aus regionalem Riesling", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "zell", "name": "Zell (Mosel) – Adventsmarkt", "link": "https://www.festivalsindeutschland.de/festival/adventsmarkt-zell-mosel", "country": "Germany", "town": "Zell (Mosel)", "address": "Marktplatz, 56856 Zell (Mosel)", "lat": 50.028, "lng": 7.183, "travel_text": "1h30", "travel_min": 90.0, "dates_text": "Sábado, 28/11", "open_periods": "2026-11-28", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One day only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "One day only, with a fairy-tale parade: a quiet alternative to Cochem.", "highlight_pt": "Um dia só, com desfile de contos de fada; alternativa tranquila a Cochem.", "highlight_fr": "Un seul jour, avec un défilé de contes : une alternative calme à Cochem.", "highlight_de": "Nur ein Tag, mit Märchenumzug: die ruhige Alternative zu Cochem.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "bullay", "name": "Bullay", "link": "https://www.festivalsindeutschland.de/festival/weihnachtsmarkt-bullay", "country": "Germany", "town": "Bullay", "address": "Ortskern, 56859 Bullay", "lat": 50.054, "lng": 7.137, "travel_text": "1h30", "travel_min": 90.0, "dates_text": "28–29/11", "open_periods": "2026-11-28 to 2026-11-29", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "Yes (train)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Zell's neighbouring village: easy to do both on the same day.", "highlight_pt": "Vilarejo vizinho de Zell; dá para fazer os dois.", "highlight_fr": "Village voisin de Zell : on peut faire les deux le même jour.", "highlight_de": "Nachbarort von Zell: beide lassen sich gut an einem Tag besuchen.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "monschau", "name": "Monschau", "link": "https://www.nrw-tourism.com/events/christmas-market-monschau#accordionEventDates", "country": "Germany", "town": "Monschau", "address": "Altstadt (Austraße), 52156 Monschau", "lat": 50.555, "lng": 6.24, "travel_text": "2h", "travel_min": 120.0, "dates_text": "Fins de semana: 27–29/11, 4–6/12, 11–13/12, 18–20/12", "open_periods": "2026-11-27 to 2026-11-29; 2026-12-04 to 2026-12-06; 2026-12-11 to 2026-12-13; 2026-12-18 to 2026-12-20", "open_days": "Daily", "closed_dates": "", "hours": "Fri–Sat 11:00–21:00; Sun 11:00–20:00", "date_status": "Confirmed", "short_run": "Weekends only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Half-timbered houses and a river. Busy on Saturday evening: go on Friday or early Sunday.", "highlight_pt": "Enxaimel e rio, mostarda artesanal da cidade. Lota no sábado à noite: vá na sexta ou no domingo cedo.", "highlight_fr": "Maisons à colombages et rivière. Bondé le samedi soir : venez le vendredi ou tôt le dimanche.", "highlight_de": "Fachwerk und Fluss. Samstagabend sehr voll: lieber Freitag oder früh am Sonntag.", "food_en": "Mustard from the historic mill, Aachener Printen", "food_pt": "Mostarda do moinho histórico e Aachener Printen", "food_fr": "Moutarde du moulin historique, Printen d'Aix-la-Chapelle", "food_de": "Senf aus der historischen Senfmühle, Aachener Printen", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "reifferscheid", "name": "Burg Reifferscheid (Eifel)", "link": "https://www.rlp-tourismus.com/fr/evenements/marches-de-noel/event/2026-11-27-17-00/Weihnachtsmarkt-Burg-Reifferscheid_Hellenthal/event.html", "country": "Germany", "town": "Hellenthal-Reifferscheid", "address": "Burg Reifferscheid, 53940 Hellenthal", "lat": 50.468, "lng": 6.468, "travel_text": "2h", "travel_min": 120.0, "dates_text": "27–29/11", "open_periods": "2026-11-27 to 2026-11-29", "open_days": "Daily", "closed_dates": "", "hours": "Opens Fri 27/11 at 17:00", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A market inside a castle. Pairs with Monschau on the same weekend.", "highlight_pt": "Feira dentro de um castelo; combina com Monschau no mesmo fim de semana.", "highlight_fr": "Un marché à l'intérieur d'un château. À combiner avec Monschau le même week-end.", "highlight_de": "Markt innerhalb einer Burg. Passt am selben Wochenende gut zu Monschau.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "falkenstein", "name": "Burgruine Falkenstein (Palatinate)", "link": "https://www.festivalsindeutschland.de/festival/weihnachtsmarkt-burgruine-falkenstein", "country": "Germany", "town": "Falkenstein (Pfalz)", "address": "Burgruine Falkenstein, 67808 Falkenstein", "lat": 49.618, "lng": 7.881, "travel_text": "2h", "travel_min": 120.0, "dates_text": "12–13/12", "open_periods": "2026-12-12 to 2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A castle ruin lit by torches, with crafts. Very small.", "highlight_pt": "Ruína de castelo com tochas e artesanato; bem pequena.", "highlight_fr": "Ruine de château éclairée aux flambeaux, avec de l'artisanat. Tout petit.", "highlight_de": "Burgruine im Fackelschein, mit Kunsthandwerk. Sehr klein.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "ingelheim", "name": "Ingelheim – Burgkirche", "link": "https://www.festivalsindeutschland.de/festival/ingelheimer-weihnachtsmarkt-an-der-burgkirche", "country": "Germany", "town": "Ingelheim am Rhein", "address": "Rosengarten an der Burgkirche, Ober-Ingelheim, 55218 Ingelheim", "lat": 49.966, "lng": 8.059, "travel_text": "2h15", "travel_min": 135.0, "dates_text": "Fins de semana de 4 a 20/12", "open_periods": "2026-12-04 to 2026-12-06; 2026-12-11 to 2026-12-13; 2026-12-18 to 2026-12-20", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "Weekends only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "In a walled rose garden at the foot of a fortified church, in red-wine country.", "highlight_pt": "Num roseiral murado aos pés de uma igreja-fortaleza, terra de vinho tinto.", "highlight_fr": "Dans une roseraie fortifiée au pied d'une église-forteresse, en pays de vin rouge.", "highlight_de": "In einem ummauerten Rosengarten unter der Burgkirche, mitten im Rotweinland.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "cochem", "name": "Cochem", "link": "https://www.festivalsindeutschland.de/festival/weihnachtsmarkt-cochem", "country": "Germany", "town": "Cochem", "address": "Marktplatz & Endertplatz, 56812 Cochem", "lat": 50.147, "lng": 7.167, "travel_text": "1h45", "travel_min": 105.0, "dates_text": "21/11 a 21/12", "open_periods": "2026-11-21 to 2026-12-21", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (train)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "With the Reichsburg castle as a backdrop. Busier; best on a weekday.", "highlight_pt": "Com o castelo Reichsburg ao fundo; mais movimentada, melhor em dia de semana.", "highlight_fr": "Avec le château de la Reichsburg en toile de fond. Plus fréquenté : mieux en semaine.", "highlight_de": "Mit der Reichsburg im Hintergrund. Belebter, am besten unter der Woche.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "trier", "name": "Trier", "link": "https://www.trierer-weihnachtsmarkt.de/en/", "country": "Germany", "town": "Trier", "address": "Hauptmarkt & Domfreihof, 54290 Trier", "lat": 49.756, "lng": 6.641, "travel_text": "45 min", "travel_min": 45.0, "dates_text": "20/11 a 22/12", "open_periods": "2026-11-20 to 2026-12-22", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (train)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A big market in front of the cathedral. Try to go on a weekday.", "highlight_pt": "Grande, tentar ir em dia de semana.", "highlight_fr": "Un grand marché devant la cathédrale. Plutôt en semaine.", "highlight_de": "Großer Markt vor dem Dom. Am besten unter der Woche.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "eguisheim", "name": "Eguisheim", "link": "https://www.jds.fr/redirection-34235_A", "country": "France", "town": "Eguisheim", "address": "", "lat": 48.043, "lng": 7.307, "travel_text": "2h45", "travel_min": 165.0, "dates_text": "27/11 a 30/12", "open_periods": "2026-11-27 to 2026-12-30", "open_days": "Daily", "closed_dates": "", "hours": "Mon–Thu 12:00–19:00 (Fri–Sun: to check)", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (Christmas shuttle from Colmar)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A circular market around the fountains and half-timbered houses.", "highlight_pt": "Feira em círculo em volta das fontes e casas enxaimel.", "highlight_fr": "Un marché en cercle autour des fontaines et des maisons à colombages.", "highlight_de": "Ein ringförmiger Markt rund um Brunnen und Fachwerkhäuser.", "food_en": "White vin chaud made with Gewurztraminer", "food_pt": "Vin chaud branco de Gewurztraminer", "food_fr": "Vin chaud blanc au Gewurztraminer", "food_de": "Weißer Glühwein aus Gewürztraminer", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "kaysersberg", "name": "Kaysersberg", "link": "https://www.kaysersberg.com/visiter/noel-dans-la-vallee-de-kaysersberg/", "country": "France", "town": "Kaysersberg Vignoble", "address": "", "lat": 48.138, "lng": 7.264, "travel_text": "2h45", "travel_min": 165.0, "dates_text": "27/11 a 20/12, só sex–dom, 10h–20h", "open_periods": "2026-11-27 to 2026-12-20", "open_days": "Fri, Sat, Sun", "closed_dates": "", "hours": "10:00–20:00", "date_status": "Confirmed", "short_run": "Weekends only", "by_public_transport": "Yes (Christmas shuttle from Colmar, Fri–Sun)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "The most traditional, focused on craftspeople.", "highlight_pt": "A mais tradicional e focada em artesãos.", "highlight_fr": "Le plus traditionnel, tourné vers les artisans.", "highlight_de": "Der traditionellste, mit Fokus auf Kunsthandwerk.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "obernai", "name": "Obernai", "link": "https://www.obernai.fr/Fr/Divertir/Manifestations/Marche-Noel-Obernai.html", "country": "France", "town": "Obernai", "address": "Place du Marché, Place du Beffroi, Place de l'Étoile, Place Néher – 67210 Obernai", "lat": 48.462, "lng": 7.482, "travel_text": "2h45", "travel_min": 165.0, "dates_text": "27/11 a 31/12", "open_periods": "2026-11-27 to 2026-12-31", "open_days": "Daily", "closed_dates": "2026-12-25", "hours": "Daily 10:00–20:00; Fri–Sat to 21:00; 24 & 31 Dec to 16:00", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (TER from Strasbourg)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Gastronomy and craft market across five squares of a walled wine town.", "highlight_pt": "Feira de gastronomia e artesanato em cinco praças de uma cidade murada de vinho.", "highlight_fr": "Marché de la gastronomie et de l'artisanat sur cinq places d'une cité viticole fortifiée.", "highlight_de": "Gastronomie- und Kunsthandwerksmarkt auf fünf Plätzen einer ummauerten Weinstadt.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "turckheim", "name": "Turckheim – Village des Lutins", "link": "https://www.turckheim.com/fr/calendrier-des-manifestations/F235015768_le-marche-de-noel-des-lutins-turckheim", "country": "France", "town": "Turckheim", "address": "Place de l'Hôtel de Ville, 68230 Turckheim", "lat": 48.087, "lng": 7.279, "travel_text": "2h45", "travel_min": 165.0, "dates_text": "27/11 a 30/12", "open_periods": "2026-11-27 to 2026-12-30", "open_days": "Daily", "closed_dates": "2026-12-25", "hours": "Mon–Thu 14:00–19:00; Fri–Sun 10:00–19:00 (some Saturdays to 20:00)", "date_status": "Confirmed", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Small, with an elves' village; far less crowded than Colmar.", "highlight_pt": "Pequena, com vila dos duendes; bem menos cheia que Colmar.", "highlight_fr": "Petit, avec un village des lutins ; bien moins de monde qu'à Colmar.", "highlight_de": "Klein, mit Wichteldorf; viel ruhiger als Colmar.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "riquewihr", "name": "Riquewihr", "link": "https://www.festivalenfrance.com/festival/marche-de-noel-de-riquewihr", "country": "France", "town": "Riquewihr", "address": "Place Fernand Zeyer, 68340 Riquewihr", "lat": 48.167, "lng": 7.297, "travel_text": "2h45", "travel_min": 165.0, "dates_text": "27/11 a 20/12 (todos os dias)", "open_periods": "2026-11-27 to 2026-12-20", "open_days": "Daily", "closed_dates": "", "hours": "Mon–Thu 10:00–18:30; Fri 10:00–20:00; Sat–Sun 10:00–19:00", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (Christmas shuttle from Colmar, Fri–Sun)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A living postcard: about 40 chalets and the night-time storytelling walk 'Wihnacht!' (6–28 Dec). Busy at weekends: go on a Thursday.", "highlight_pt": "Cartão-postal vivo, cerca de 40 chalés e visita noturna contada \"Wihnacht!\" (6–28/12). Lota no fim de semana: vá numa quinta.", "highlight_fr": "Une carte postale vivante : une quarantaine de chalets et la visite contée nocturne « Wihnacht ! » (6–28 déc.). Bondé le week-end : venez un jeudi.", "highlight_de": "Eine lebende Postkarte: rund 40 Hütten und die nächtliche Erzählführung „Wihnacht!“ (6.–28.12.). Am Wochenende voll: lieber donnerstags.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "sarreguemines", "name": "Sarreguemines – Marché Faïencier", "link": "https://www.festivalenfrance.com/festival/marche-de-noel-de-sarreguemines", "country": "France", "town": "Sarreguemines", "address": "Place du Marché, 57200 Sarreguemines", "lat": 49.11, "lng": 7.068, "travel_text": "1h30", "travel_min": 90.0, "dates_text": "Fim de novembro a 24/12", "open_periods": "2026-11-20 to 2026-12-24", "open_days": "Daily", "closed_dates": "", "hours": "Mon–Thu 11:00–19:00; Fri–Sun 11:00–20:00 (not confirmed for 2026)", "date_status": "To confirm", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "About 30 chalets; combine it with the earthenware museum.", "highlight_pt": "Cerca de 30 chalés; dá para emendar com o museu de cerâmica.", "highlight_fr": "Une trentaine de chalets ; à combiner avec le musée de la faïence.", "highlight_de": "Rund 30 Hütten; lässt sich mit dem Fayence-Museum verbinden.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "charmes", "name": "Charmes – Village de Noël (Vosges)", "link": "https://www.info-lux.com/?p=1713455", "country": "France", "town": "Charmes", "address": "Place de l'Espée, 88130 Charmes", "lat": 48.373, "lng": 6.292, "travel_text": "2h", "travel_min": 120.0, "dates_text": "12–13/12", "open_periods": "2026-12-12 to 2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "", "tickets": "Free", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A small-town market, not touristy at all.", "highlight_pt": "Feirinha de cidade pequena, nada turística.", "highlight_fr": "Marché de petite ville, pas du tout touristique.", "highlight_de": "Kleinstadtmarkt, überhaupt nicht touristisch.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "metz", "name": "Metz – Le Marché merveilleux", "link": "https://www.festivalenfrance.com/festival/marche-de-noel-de-metz", "country": "France", "town": "Metz", "address": "Places Saint-Louis, Saint-Jacques, d'Armes, République & Comédie – 57000 Metz", "lat": 49.12, "lng": 6.176, "travel_text": "50 min", "travel_min": 50.0, "dates_text": "20/11 a 30/12", "open_periods": "2026-11-20 to 2026-12-30", "open_days": "Daily", "closed_dates": "2026-12-25", "hours": "Sun–Thu 11:00–21:00; Fri–Sat 11:00–22:00; 24 Dec to 16:00 (Place de la Comédie: Mon–Fri 17:00–23:00, Sat–Sun 11:00–23:00)", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (train)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Bigger, but Place Saint-Louis under its medieval arcades is the most charming part.", "highlight_pt": "Maior, mas a place Saint-Louis, sob as arcadas medievais, é a parte mais charmosa; Sentier des Lanternes no Jardin Botanique.", "highlight_fr": "Plus grand, mais la place Saint-Louis et ses arcades médiévales en est le coin le plus charmant.", "highlight_de": "Größer, aber die Place Saint-Louis unter den mittelalterlichen Arkaden ist der schönste Teil.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "nancy", "name": "Nancy – Fêtes de Saint-Nicolas", "link": "https://www.jds.fr/nancy/manifestations/marche-de-noel/fete-et-marche-de-saint-nicolas-nancy-111864_A", "country": "France", "town": "Nancy", "address": "Place Stanislas, Place Charles III, Place de la Carrière – 54000 Nancy", "lat": 48.693, "lng": 6.183, "travel_text": "1h40", "travel_min": 100.0, "dates_text": "20/11 a 03/01", "open_periods": "2026-11-20 to 2027-01-03", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (train)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Big; go on a weekday. Saint Nicholas parade on 5 December.", "highlight_pt": "Grande, ir em dia de semana. No dia 5 de dezembro ocorre um desfile de Natal.", "highlight_fr": "Grand : plutôt en semaine. Défilé de la Saint-Nicolas le 5 décembre.", "highlight_de": "Groß; lieber unter der Woche. Nikolausumzug am 5. Dezember.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "arlon", "name": "Arlon – Marché de Noël de l'ACIA", "link": "https://www.arlon.be/lepalais/evenements/marche-marche-de-noel-de-lacia?u=aae044b8ef53413bb26f7bcfd226b4dd", "country": "Belgium", "town": "Arlon", "address": "", "lat": 49.683, "lng": 5.816, "travel_text": "30 min", "travel_min": 30.0, "dates_text": "27–29/11 e 4–6/12", "open_periods": "2026-11-27 to 2026-11-29; 2026-12-04 to 2026-12-06", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "Two weekends", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A small charity market just over the border.", "highlight_pt": "Feira solidária pequena, logo após a fronteira.", "highlight_fr": "Petit marché solidaire, juste après la frontière.", "highlight_de": "Kleiner Wohltätigkeitsmarkt direkt hinter der Grenze.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "spontin", "name": "Château de Spontin", "link": "https://chateaudespontin.be/events/", "country": "Belgium", "town": "Yvoir (Spontin)", "address": "Chaussée de Dinant 8, 5530 Yvoir", "lat": 50.322, "lng": 5.008, "travel_text": "1h45", "travel_min": 105.0, "dates_text": "5–6/12", "open_periods": "2026-12-05 to 2026-12-06", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Inside a fortified castle, with a choir and local producers. One of the most photogenic.", "highlight_pt": "Dentro de um castelo-forte, com coral e produtores. Um dos mais fotogênicos.", "highlight_fr": "Dans un château fort, avec chorale et producteurs. L'un des plus photogéniques.", "highlight_de": "In einer Wasserburg, mit Chor und regionalen Erzeugern. Einer der fotogensten.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "maredsous", "name": "Abbaye de Maredsous", "link": "https://tourisme-maredsous.be/marchedenoel/", "country": "Belgium", "town": "Denée (Anhée)", "address": "Rue de Maredsous 11, 5537 Denée", "lat": 50.299, "lng": 4.766, "travel_text": "1h50", "travel_min": 110.0, "dates_text": "13/11 a 20/12 (em 2025, só fins de semana)", "open_periods": "2026-11-13 to 2026-12-20", "open_days": "Sat, Sun", "closed_dates": "", "hours": "", "date_status": "To confirm", "short_run": "Weekends only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "About 60 chalets at the foot of the abbey, with ice skating.", "highlight_pt": "Cerca de 60 chalés aos pés da abadia, queijo e cerveja dos monges, patinação.", "highlight_fr": "Une soixantaine de chalets au pied de l'abbaye, avec patinoire.", "highlight_de": "Rund 60 Hütten am Fuß der Abtei, mit Eisbahn.", "food_en": "The monks' cheese and beer", "food_pt": "Queijo e cerveja dos monges", "food_fr": "Fromage et bière des moines", "food_de": "Käse und Bier der Mönche", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "ciney", "name": "Ciney – Féeries du Parc", "link": "https://www.lesfeeriesduparc.be/fr/", "country": "Belgium", "town": "Ciney", "address": "Parc Saint-Roch, Avenue du Sainfoin, 5590 Ciney", "lat": 50.296, "lng": 5.096, "travel_text": "1h30", "travel_min": 90.0, "dates_text": "Qui–seg: 3–7, 10–14 e 17–21/12", "open_periods": "2026-12-03 to 2026-12-07; 2026-12-10 to 2026-12-14; 2026-12-17 to 2026-12-21", "open_days": "Daily", "closed_dates": "", "hours": "Thu, Fri & Mon 16:00–22:00; Sat–Sun 11:00–22:00", "date_status": "Confirmed", "short_run": "Long weekends only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "An illuminated park; on 5–6 December pair it with Spontin and Maredsous.", "highlight_pt": "Parque iluminado; no fim de semana de 5–6/12 dá para emendar com Spontin e Maredsous.", "highlight_fr": "Un parc illuminé ; le week-end des 5–6 décembre, à combiner avec Spontin et Maredsous.", "highlight_de": "Ein beleuchteter Park; am 5./6. Dezember gut mit Spontin und Maredsous kombinierbar.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "durbuy", "name": "Durbuy", "link": "https://visitwallonia.com/en-gb/content/durbuy-christmas-market?cookie_lang=en-gb", "country": "Belgium", "town": "Durbuy", "address": "Place aux Foires & Parc des Topiaires, 6940 Durbuy", "lat": 50.352, "lng": 5.456, "travel_text": "1h20", "travel_min": 80.0, "dates_text": "Fins de semana desde 20/11; todos os dias de 18/12 a 3/1", "open_periods": "2026-11-20 to 2026-11-22; 2026-11-27 to 2026-11-29; 2026-12-04 to 2026-12-06; 2026-12-11 to 2026-12-13; 2026-12-18 to 2027-01-03", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "'The world's smallest town', with lit-up lanes. Go before 18 December.", "highlight_pt": "\"Menor cidade do mundo\", ruelas iluminadas e a batata com foie gras local. Vá antes de 18/12.", "highlight_fr": "« La plus petite ville du monde » et ses ruelles illuminées. Allez-y avant le 18 décembre.", "highlight_de": "„Die kleinste Stadt der Welt“ mit beleuchteten Gassen. Am besten vor dem 18. Dezember.", "food_en": "The local potato filled with foie gras", "food_pt": "A batata recheada com foie gras", "food_fr": "La pomme de terre au foie gras", "food_de": "Die Kartoffel mit Foie gras", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "rochefort", "name": "Rochefort", "link": "https://www.rocheforttourisme.be/agenda/marche-de-noel-de-rochefort", "country": "Belgium", "town": "Rochefort", "address": "", "lat": 50.163, "lng": 5.222, "travel_text": "1h30", "travel_min": 90.0, "dates_text": "11–20/12", "open_periods": "2026-12-11 to 2026-12-20", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A small market in the Trappist beer town.", "highlight_pt": "Cidade da cerveja trapista; feira pequena.", "highlight_fr": "Petit marché dans la ville de la bière trappiste.", "highlight_de": "Kleiner Markt in der Stadt des Trappistenbiers.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "hotton", "name": "Hotton", "link": "https://www.cestnoel.be/marche-de-noel/marche-de-noel-de-hotton", "country": "Belgium", "town": "Hotton", "address": "", "lat": 50.268, "lng": 5.447, "travel_text": "1h20", "travel_min": 80.0, "dates_text": "4–13/12", "open_periods": "2026-12-04 to 2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "An Ardennes village market, very local.", "highlight_pt": "Vilarejo das Ardenas, bem local.", "highlight_fr": "Marché de village ardennais, très local.", "highlight_de": "Ardennen-Dorfmarkt, sehr lokal.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "thorn", "name": "Thorn – the white town", "link": "https://go-kids.nl/limburg/agenda/thorn-or-kerstmarkt", "country": "Netherlands", "town": "Thorn", "address": "Historic centre, 6017 Thorn", "lat": 51.161, "lng": 5.842, "travel_text": "2h30", "travel_min": 150.0, "dates_text": "13/12", "open_periods": "2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One day only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "All-white houses and a Dickens atmosphere. The most charming find in the Netherlands.", "highlight_pt": "Casas todas brancas, clima Dickens. O achado mais charmoso da Holanda.", "highlight_fr": "Des maisons toutes blanches et une ambiance Dickens. La plus jolie découverte des Pays-Bas.", "highlight_de": "Lauter weiße Häuser und Dickens-Atmosphäre. Die charmanteste Entdeckung der Niederlande.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "valkenburg", "name": "Valkenburg – cave markets", "link": "https://www.christmastownvalkenburg.com/", "country": "Netherlands", "town": "Valkenburg", "address": "Gemeentegrot, Cauberg 4 & Fluweelengrot, Daalhemerweg 27, Valkenburg", "lat": 50.865, "lng": 5.832, "travel_text": "2h15", "travel_min": 135.0, "dates_text": "Grutas: 13/11 a 30/12; cidade até 3/1", "open_periods": "2026-11-13 to 2026-12-30", "open_days": "Daily", "closed_dates": "", "hours": "Mon–Fri 11:00–19:00; Sat–Sun 10:00–19:00", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (train)", "tickets": "Timed tickets", "dogs": "No", "indoor": "Yes", "kids": "", "highlight_en": "Two underground markets in caves. Timed tickets required; go on a weekday.", "highlight_pt": "Duas feiras subterrâneas em grutas. Exige ingresso com horário; vá em dia de semana.", "highlight_fr": "Deux marchés souterrains dans des grottes. Billet horodaté obligatoire ; plutôt en semaine.", "highlight_de": "Zwei unterirdische Märkte in Höhlen. Zeitfenster-Ticket nötig; lieber unter der Woche.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "herzogenrath", "name": "Burg Rode, Herzogenrath", "link": "https://www.festivalsindeutschland.de/en/festival/herzogenrath-castle-christmas", "country": "Germany", "town": "Herzogenrath", "address": "Ferdinand-Schmetz-Platz, 52134 Herzogenrath", "lat": 50.869, "lng": 6.094, "travel_text": "2h15", "travel_min": 135.0, "dates_text": "11–13/12", "open_periods": "2026-12-11 to 2026-12-13", "open_days": "Daily", "closed_dates": "", "hours": "Opens Fri 11/12 at 17:30", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A medieval hilltop castle on the Dutch border; pairs with Valkenburg and Thorn.", "highlight_pt": "Castelo medieval no alto; combina com Valkenburg e Thorn no mesmo fim de semana.", "highlight_fr": "Château médiéval perché à la frontière néerlandaise ; à combiner avec Valkenburg et Thorn.", "highlight_de": "Mittelalterliche Höhenburg an der niederländischen Grenze; passt zu Valkenburg und Thorn.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "maastricht", "name": "Maastricht – Magisch Maastricht", "link": "https://www.magischmaastrichtvrijthof.nl/home-en", "country": "Netherlands", "town": "Maastricht", "address": "Vrijthof, Maastricht", "lat": 50.849, "lng": 5.687, "travel_text": "2h15", "travel_min": 135.0, "dates_text": "27/11 a 27/12", "open_periods": "2026-11-27 to 2026-12-27", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (train)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A big market on the Vrijthof square, 20 minutes from Valkenburg.", "highlight_pt": "Feira grande na praça Vrijthof, a 20 min de Valkenburg.", "highlight_fr": "Un grand marché sur la place du Vrijthof, à 20 minutes de Valkenburg.", "highlight_de": "Großer Markt auf dem Vrijthof, 20 Minuten von Valkenburg.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "gruyeres", "name": "Gruyères", "link": "https://www.noel-gruyeres.ch/en", "country": "Switzerland", "town": "Gruyères", "address": "Old town, 1663 Gruyères", "lat": 46.584, "lng": 7.083, "travel_text": "~4h by car", "travel_min": 240.0, "dates_text": "27/11 a 20/12, só sex–dom", "open_periods": "2026-11-27 to 2026-12-20", "open_days": "Fri, Sat, Sun", "closed_dates": "", "hours": "Fri 14:00–20:00; Sat 10:00–20:00; Sun 10:00–18:00", "date_status": "Confirmed", "short_run": "Weekends only", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A medieval village with about 40 stalls. The most charming Swiss market.", "highlight_pt": "Vila medieval com cerca de 40 barracas e fondue no lugar de origem do queijo.", "highlight_fr": "Village médiéval avec une quarantaine de stands. Le marché suisse le plus charmant.", "highlight_de": "Mittelalterliches Städtchen mit rund 40 Ständen. Der charmanteste Markt der Schweiz.", "food_en": "Fondue where the cheese was born", "food_pt": "Fondue no lugar de origem do queijo", "food_fr": "La fondue là où le fromage est né", "food_de": "Fondue dort, wo der Käse herkommt", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "einsiedeln", "name": "Einsiedeln", "link": "https://www.einsiedler-weihnacht.ch/", "country": "Switzerland", "town": "Einsiedeln", "address": "Hauptstrasse & Klosterplatz, 8840 Einsiedeln", "lat": 47.127, "lng": 8.751, "travel_text": "~5h", "travel_min": 300.0, "dates_text": "27/11 a 6/12 (só 10 dias)", "open_periods": "2026-11-27 to 2026-12-06", "open_days": "Daily", "closed_dates": "", "hours": "Opens Fri 27/11 at 17:00", "date_status": "Confirmed", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "In front of the huge baroque abbey, with choir concerts. Only 10 days.", "highlight_pt": "Diante da enorme abadia barroca, com concertos de coral.", "highlight_fr": "Devant l'immense abbaye baroque, avec des concerts de chorale. Seulement 10 jours.", "highlight_de": "Vor der riesigen Barockabtei, mit Chorkonzerten. Nur 10 Tage.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "brienz", "name": "Brienz", "link": "https://holidaystoswitzerland.com/swiss-christmas-market-dates/", "country": "Switzerland", "town": "Brienz", "address": "", "lat": 46.754, "lng": 8.038, "travel_text": "~5h", "travel_min": 300.0, "dates_text": "28–29/11", "open_periods": "2026-11-28 to 2026-11-29", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "One weekend", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A lakeside village of woodcarvers; two days only.", "highlight_pt": "Vilarejo de entalhadores de madeira à beira do lago; dois dias só.", "highlight_fr": "Village de sculpteurs sur bois au bord du lac ; deux jours seulement.", "highlight_de": "Holzschnitzerdorf am See; nur zwei Tage.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "montreux", "name": "Montreux Noël", "link": "https://radicalstorage.com/travel/?p=88818", "country": "Switzerland", "town": "Montreux", "address": "Lakeside quays, from the CGN pier to Place du Marché, 1820 Montreux", "lat": 46.433, "lng": 6.911, "travel_text": "~5h, or fly to Geneva", "travel_min": 300.0, "dates_text": "20/11 a 24/12", "open_periods": "2026-11-20 to 2026-12-24", "open_days": "Daily", "closed_dates": "", "hours": "Mon–Wed 11:00–21:00; Thu–Fri 11:00–22:00; Sat 10:00–22:00; Sun 10:00–20:00; 24 Dec 11:00–17:00", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (train)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Bigger, but on Lake Geneva, with a 'flying' Santa over the chalets. Pair it with Chillon Castle.", "highlight_pt": "Maior, mas à beira do Lago Léman, com o Papai Noel \"voando\" sobre os chalés. Combine com o castelo de Chillon.", "highlight_fr": "Plus grand, mais au bord du Léman, avec un Père Noël « volant » au-dessus des chalets. À combiner avec Chillon.", "highlight_de": "Größer, aber am Genfersee, mit „fliegendem“ Weihnachtsmann über den Hütten. Mit Schloss Chillon kombinieren.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "basel", "name": "Basel", "link": "https://www.basel.com/en/events/christmas/christmas-market", "country": "Switzerland", "town": "Basel", "address": "Münsterplatz & Barfüsserplatz, Basel", "lat": 47.556, "lng": 7.59, "travel_text": "~3h", "travel_min": 180.0, "dates_text": "26/11 a 23/12", "open_periods": "2026-11-26 to 2026-12-23", "open_days": "Daily", "closed_dates": "", "hours": "Daily 11:00–20:30", "date_status": "Confirmed", "short_run": "", "by_public_transport": "Yes (train)", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "Switzerland's largest; Münsterplatz is calmer than Barfüsserplatz.", "highlight_pt": "A maior da Suíça; vale pela Münsterplatz, mais calma que a Barfüsserplatz.", "highlight_fr": "Le plus grand de Suisse ; la Münsterplatz est plus calme que la Barfüsserplatz.", "highlight_de": "Der größte der Schweiz; der Münsterplatz ist ruhiger als der Barfüsserplatz.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "tallinn", "name": "Tallinn (Estonia)", "link": "https://pixidia.com/?p=87672", "country": "Estonia", "town": "Tallinn", "address": "Raekoja plats (Town Hall Square), Tallinn", "lat": 59.437, "lng": 24.745, "travel_text": "Flight", "travel_min": "", "dates_text": "20/11/2026 a 6/1/2027", "open_periods": "2026-11-20 to 2027-01-06", "open_days": "Daily", "closed_dates": "", "hours": "Stalls 10:00–20:00 (check christmasmarket.ee)", "date_status": "Confirmed", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "A medieval town hall square: one of Europe's most traditional markets, off the obvious circuit.", "highlight_pt": "Praça medieval da prefeitura, uma das mais tradicionais da Europa e longe do circuito óbvio.", "highlight_fr": "Une place de l'hôtel de ville médiévale : l'un des marchés les plus traditionnels d'Europe, hors des circuits.", "highlight_de": "Mittelalterlicher Rathausplatz: einer der traditionellsten Märkte Europas, abseits der üblichen Route.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}, {"id": "vienna-spittelberg", "name": "Vienna – Spittelberg (Austria)", "link": "https://www.vienna.at/vienna-christmas-markets-2026-an-overview-of-all-15-markets/10602305", "country": "Austria", "town": "Vienna", "address": "Spittelberggasse, 1070 Wien", "lat": 48.203, "lng": 16.355, "travel_text": "Flight", "travel_min": "", "dates_text": "13/11 a 23/12", "open_periods": "2026-11-13 to 2026-12-23", "open_days": "Daily", "closed_dates": "", "hours": "", "date_status": "Confirmed", "short_run": "", "by_public_transport": "", "tickets": "", "dogs": "", "indoor": "", "kids": "", "highlight_en": "An artisans' market in narrow Biedermeier lanes, away from the Rathausplatz crowds.", "highlight_pt": "Feira de artesãos em vielas estreitas de casas Biedermeier; foge da multidão da Rathausplatz.", "highlight_fr": "Marché d'artisans dans des ruelles Biedermeier, loin de la foule de la Rathausplatz.", "highlight_de": "Kunsthandwerksmarkt in engen Biedermeier-Gassen, weg vom Trubel am Rathausplatz.", "food_en": "", "food_pt": "", "food_fr": "", "food_de": "", "paula_visited": "", "instagram_link": "", "show_on_site": "Yes"}];
+const UPDATED = "2026-11-04";
+const ROUTES = [{"id": "opening-weekend", "start": "2026-11-20", "end": "2026-11-22", "markets": "noertrange, durbuy", "title_en": "Opening weekend", "title_pt": "Fim de semana de abertura", "title_fr": "Week-end d'ouverture", "title_de": "Eröffnungswochenende", "plan_en": "Noertrange on Saturday evening, plus Durbuy's opening weekend.", "plan_pt": "Noertrange no sábado à noite e a abertura de Durbuy.", "plan_fr": "Noertrange le samedi soir, et le week-end d'ouverture de Durbuy.", "plan_de": "Noertrange am Samstagabend, dazu das Eröffnungswochenende in Durbuy.", "base_en": "Day trips", "base_pt": "Bate-volta", "base_fr": "Allers-retours dans la journée", "base_de": "Tagesausflüge", "show_on_site": "Yes"}, {"id": "moselle-wine-villages", "start": "2026-11-27", "end": "2026-11-29", "markets": "zell, bullay, traben-trarbach, bernkastel-kues", "title_en": "Moselle wine villages", "title_pt": "Vilarejos de vinho da Mosela", "title_fr": "Villages viticoles de la Moselle", "title_de": "Weindörfer an der Mosel", "plan_en": "Zell and Bullay on Saturday; Traben-Trarbach's cellars and Bernkastel-Kues on Sunday.", "plan_pt": "Zell e Bullay no sábado; as adegas de Traben-Trarbach e Bernkastel-Kues no domingo.", "plan_fr": "Zell et Bullay le samedi ; les caves de Traben-Trarbach et Bernkastel-Kues le dimanche.", "plan_de": "Samstag Zell und Bullay; Sonntag die Keller in Traben-Trarbach und Bernkastel-Kues.", "base_en": "Stay in Bernkastel-Kues", "base_pt": "Dormir em Bernkastel-Kues", "base_fr": "Nuit à Bernkastel-Kues", "base_de": "Übernachtung in Bernkastel-Kues", "show_on_site": "Yes"}, {"id": "eifel-castles", "start": "2026-11-27", "end": "2026-11-29", "markets": "monschau, reifferscheid", "title_en": "Eifel half-timber and castle", "title_pt": "Enxaimel e castelo no Eifel", "title_fr": "Colombages et château dans l'Eifel", "title_de": "Fachwerk und Burg in der Eifel", "plan_en": "Monschau on Friday evening, before the crowds, then the market inside Burg Reifferscheid.", "plan_pt": "Monschau na sexta à noite, antes da multidão, e depois a feira dentro do Burg Reifferscheid.", "plan_fr": "Monschau le vendredi soir, avant la foule, puis le marché dans le château de Reifferscheid.", "plan_de": "Monschau am Freitagabend, bevor es voll wird, dann der Markt in der Burg Reifferscheid.", "base_en": "Stay in Monschau", "base_pt": "Dormir em Monschau", "base_fr": "Nuit à Monschau", "base_de": "Übernachtung in Monschau", "show_on_site": "Yes"}, {"id": "ardennes-castles", "start": "2026-12-04", "end": "2026-12-06", "markets": "spontin, maredsous, ciney", "title_en": "Belgian Ardennes: castle and abbey", "title_pt": "Ardenas belgas: castelo e abadia", "title_fr": "Ardennes belges : château et abbaye", "title_de": "Belgische Ardennen: Burg und Abtei", "plan_en": "Château de Spontin, Maredsous Abbey and Ciney's lit-up park, all within half an hour of each other.", "plan_pt": "Château de Spontin, Abadia de Maredsous e o parque iluminado de Ciney, tudo a meia hora um do outro.", "plan_fr": "Château de Spontin, abbaye de Maredsous et le parc illuminé de Ciney, à une demi-heure les uns des autres.", "plan_de": "Château de Spontin, Abtei Maredsous und der beleuchtete Park in Ciney, alle eine halbe Stunde voneinander entfernt.", "base_en": "Stay in Dinant", "base_pt": "Dormir em Dinant", "base_fr": "Nuit à Dinant", "base_de": "Übernachtung in Dinant", "show_on_site": "Yes"}, {"id": "limburg-caves", "start": "2026-12-11", "end": "2026-12-13", "markets": "herzogenrath, valkenburg, thorn", "title_en": "Limburg: caves and the white town", "title_pt": "Limburgo: grutas e a cidade branca", "title_fr": "Limbourg : grottes et ville blanche", "title_de": "Limburg: Höhlen und die weiße Stadt", "plan_en": "Burg Rode on Friday, Valkenburg's caves on Saturday, Thorn on Sunday.", "plan_pt": "Burg Rode na sexta, as grutas de Valkenburg no sábado e Thorn no domingo.", "plan_fr": "Burg Rode le vendredi, les grottes de Valkenburg le samedi, Thorn le dimanche.", "plan_de": "Freitag Burg Rode, Samstag die Höhlen von Valkenburg, Sonntag Thorn.", "base_en": "Stay in Maastricht", "base_pt": "Dormir em Maastricht", "base_fr": "Nuit à Maastricht", "base_de": "Übernachtung in Maastricht", "show_on_site": "Yes"}, {"id": "close-to-home", "start": "2026-12-12", "end": "2026-12-13", "markets": "grevenmacher, wincheringen, echternach", "title_en": "Close to home", "title_pt": "Perto de casa", "title_fr": "Tout près de chez soi", "title_de": "Ganz in der Nähe", "plan_en": "Grevenmacher and Wincheringen on Saturday, Echternach on Sunday. Everything within 35 minutes.", "plan_pt": "Grevenmacher e Wincheringen no sábado, Echternach no domingo. Tudo a até 35 minutos.", "plan_fr": "Grevenmacher et Wincheringen le samedi, Echternach le dimanche. Tout à moins de 35 minutes.", "plan_de": "Samstag Grevenmacher und Wincheringen, Sonntag Echternach. Alles in höchstens 35 Minuten.", "base_en": "Day trips", "base_pt": "Bate-volta", "base_fr": "Allers-retours dans la journée", "base_de": "Tagesausflüge", "show_on_site": "Yes"}, {"id": "alsace-wine-route", "start": "2026-12-18", "end": "2026-12-20", "markets": "kaysersberg, eguisheim, turckheim, riquewihr", "title_en": "Alsace wine route", "title_pt": "Rota dos vinhos da Alsácia", "title_fr": "Route des vins d'Alsace", "title_de": "Elsässer Weinstraße", "plan_en": "Kaysersberg on Friday, then Eguisheim and Turckheim. Riquewihr's last day is Sunday the 20th.", "plan_pt": "Kaysersberg na sexta, depois Eguisheim e Turckheim. O último dia de Riquewihr é domingo, 20.", "plan_fr": "Kaysersberg le vendredi, puis Eguisheim et Turckheim. Dernier jour à Riquewihr le dimanche 20.", "plan_de": "Freitag Kaysersberg, dann Eguisheim und Turckheim. Riquewihrs letzter Tag ist Sonntag, der 20.", "base_en": "Stay in Colmar or Eguisheim", "base_pt": "Dormir em Colmar ou Eguisheim", "base_fr": "Nuit à Colmar ou Eguisheim", "base_de": "Übernachtung in Colmar oder Eguisheim", "show_on_site": "Yes"}];
+const INSTAGRAM_URL = "https://www.instagram.com/the.traveling.taste/";
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScN6P_OIkd9-JIsnBE9BpgIZ_sXtSoTjsepsABA0F6KVj0C4Q/viewform";   /* paste the Google Forms link here */
+
+const T = {
+ en: { titleEm:"Christmas markets", routesTitle:"Weekend routes", routesSub:"Nearby markets grouped into one weekend, with where to stay.", seeWeekend:"Show this weekend", groupShort:"Only a few days", groupShortSub:"One day, one weekend or short runs. Plan around these.", groupSeason:"Open all season", groupSeasonSub:"Open for weeks, so they will still be there next time.", sugText2:"Know a charming Christmas market that belongs here? Send it through the form. Every suggestion is checked before it goes on the page.", sugBtn:"Suggest a market", sugBtnIg:"Send me a message on Instagram", eyebrow:"Advent 2026 · around Luxembourg", title:"Which Christmas markets are open?", lede:"Charming Christmas markets a few hours from Luxembourg, plus a few worth the trip, picked for atmosphere and food. Choose a day to see every one that's open.",
+   today:"Today", weekend:"This weekend", nextweekend:"Next weekend", pickDate:"Or pick a date", travel:"Travel time from Luxembourg City", country:"Country", filters:"Filters",
+   t60:"Up to 1 hour", t120:"Up to 2 hours", t180:"Up to 3 hours", tany:"Any distance, flights included", allC:"All countries",
+   fShort:"Short-run markets only", fTrain:"Reachable by train or bus", fIndoor:"Indoor / rain-proof",
+   open1:"open", openN:"open", none:"No markets match this day and these filters.", nextOpen:"Next day with markets:", widen:"Show any distance",
+   calTitle:"Calendar", calLegend:"The number is how many markets are open that day with your filters. Gold tags are short-run markets, the easiest to miss. Tap a day to see them.",
+   prev:"Previous month", next:"Next month", fromLux:"from Luxembourg City", hours:"Hours", eat:"Eat & drink", official:"More info", dirs:"Map", cal:"Calendar", share:"WhatsApp", calLong:"Add to Google Calendar", shareLong:"Share on WhatsApp", officialLong:"Official page (opens in a new tab)",
+   tbc:"Date to confirm", tickets:"Tickets", noDogs:"No dogs", dogsOk:"Dogs welcome", indoor:"Indoor", train:"By train/bus", visited:"Paula visited", watch:"Watch the reel", daily:"daily", hoursTbc:"Hours not published yet",
+   weekendOf:"Weekend of", sat:"Sat", sun:"Sun", both:"Sat & Sun", satOnly:"Saturday only", sunOnly:"Sunday only",
+   sugTitle:"Want to suggest a market?", sugText:"Know a little village market that belongs here? Tell me about it. Every suggestion is checked before it goes on the page.", sugHow:"Fill in what you know, copy it, and send it to me as a message on Instagram.",
+   sName:"Market name", sTown:"Town and country", sDates:"Dates (if you know them)", sWhy:"Why is it special? What should people eat there?", sCopy:"Copy my suggestion", sIg:"Open Instagram",
+   copied:"Copied. Paste it in a message to @the.traveling.taste on Instagram.", copyFail:"Your browser blocked copying. Select the text below and copy it.", needName:"Add the market's name first.",
+   disclaimer:"Dates and hours come from official and local sources. Small markets change plans, so check the official link before you go. Last updated: ",
+   short:{"One day only":"One day only","One weekend":"One weekend","Two weekends":"Two weekends","Weekends only":"Weekends only","Long weekends only":"Long weekends only"} },
+ pt: { titleEm:"feirinhas de Natal", routesTitle:"Roteiros de fim de semana", routesSub:"Feiras próximas agrupadas num mesmo fim de semana, com sugestão de onde dormir.", seeWeekend:"Ver este fim de semana", groupShort:"Só por poucos dias", groupShortSub:"Um dia, um fim de semana ou temporadas curtas. Planeje em torno delas.", groupSeason:"Abertas a temporada toda", groupSeasonSub:"Ficam abertas por semanas, então dá para ir outro dia.", sugText2:"Conhece uma feira de Natal charmosa que merece estar aqui? Mande pelo formulário. Toda sugestão é conferida antes de entrar na página.", sugBtn:"Sugerir uma feira", sugBtnIg:"Me mande uma mensagem no Instagram", eyebrow:"Advento 2026 · arredores de Luxemburgo", title:"Quais feirinhas de Natal estão abertas?", lede:"Feirinhas de Natal charmosas a poucas horas de Luxemburgo, e algumas que valem a viagem, escolhidas pelo clima e pela comida. Escolha um dia para ver todas as que estão abertas.",
+   today:"Hoje", weekend:"Este fim de semana", nextweekend:"Próximo fim de semana", pickDate:"Ou escolha uma data", travel:"Tempo de viagem saindo da Cidade de Luxemburgo", country:"País", filters:"Filtros",
+   t60:"Até 1 hora", t120:"Até 2 horas", t180:"Até 3 horas", tany:"Qualquer distância, com voos", allC:"Todos os países",
+   fShort:"Só feiras de poucos dias", fTrain:"Dá para ir de trem ou ônibus", fIndoor:"Cobertas / à prova de chuva",
+   open1:"aberta", openN:"abertas", none:"Nenhuma feira para este dia com esses filtros.", nextOpen:"Próximo dia com feiras:", widen:"Mostrar qualquer distância",
+   calTitle:"Calendário", calLegend:"O número mostra quantas feiras abrem naquele dia com os seus filtros. As etiquetas douradas são as feiras de poucos dias, as mais fáceis de perder. Toque num dia para ver.",
+   prev:"Mês anterior", next:"Próximo mês", fromLux:"da Cidade de Luxemburgo", hours:"Horário", eat:"Comer e beber", official:"Mais info", dirs:"Mapa", cal:"Agenda", share:"WhatsApp", calLong:"Adicionar ao Google Agenda", shareLong:"Compartilhar no WhatsApp", officialLong:"Página oficial (abre em nova aba)",
+   tbc:"Data a confirmar", tickets:"Ingresso", noDogs:"Não aceita cães", dogsOk:"Aceita cães", indoor:"Coberta", train:"De trem/ônibus", visited:"Paula visitou", watch:"Ver o reel", daily:"todos os dias", hoursTbc:"Horário ainda não divulgado",
+   weekendOf:"Fim de semana de", sat:"Sáb", sun:"Dom", both:"Sáb e dom", satOnly:"Só no sábado", sunOnly:"Só no domingo",
+   sugTitle:"Quer sugerir uma feira?", sugText:"Conhece uma feirinha de vilarejo que merece estar aqui? Me conta. Toda sugestão é conferida antes de entrar na página.", sugHow:"Preencha o que souber, copie e me mande por mensagem no Instagram.",
+   sName:"Nome da feira", sTown:"Cidade e país", sDates:"Datas (se souber)", sWhy:"O que ela tem de especial? O que comer lá?", sCopy:"Copiar minha sugestão", sIg:"Abrir o Instagram",
+   copied:"Copiado. Cole numa mensagem para @the.traveling.taste no Instagram.", copyFail:"Seu navegador bloqueou a cópia. Selecione o texto abaixo e copie.", needName:"Coloque o nome da feira primeiro.",
+   disclaimer:"Datas e horários vêm de fontes oficiais e locais. Feiras pequenas mudam de planos, então confira o link oficial antes de ir. Última atualização: ",
+   short:{"One day only":"Só um dia","One weekend":"Um fim de semana","Two weekends":"Dois fins de semana","Weekends only":"Só fins de semana","Long weekends only":"Só fins de semana prolongados"} },
+ fr: { titleEm:"marchés de Noël", routesTitle:"Itinéraires du week-end", routesSub:"Des marchés proches regroupés sur un même week-end, avec où dormir.", seeWeekend:"Voir ce week-end", groupShort:"Quelques jours seulement", groupShortSub:"Un jour, un week-end ou une courte période. Organisez-vous autour d'eux.", groupSeason:"Ouverts toute la saison", groupSeasonSub:"Ouverts plusieurs semaines : ils seront encore là la prochaine fois.", sugText2:"Vous connaissez un marché de Noël plein de charme qui a sa place ici ? Envoyez-le via le formulaire. Chaque suggestion est vérifiée avant de paraître.", sugBtn:"Proposer un marché", sugBtnIg:"Écrivez-moi sur Instagram", eyebrow:"Avent 2026 · autour du Luxembourg", title:"Quels marchés de Noël sont ouverts ?", lede:"Des marchés de Noël pleins de charme à quelques heures du Luxembourg, et quelques-uns qui valent le voyage, choisis pour l'ambiance et la cuisine. Choisissez un jour pour voir tous ceux qui sont ouverts.",
+   today:"Aujourd'hui", weekend:"Ce week-end", nextweekend:"Le week-end prochain", pickDate:"Ou choisissez une date", travel:"Trajet depuis Luxembourg-Ville", country:"Pays", filters:"Filtres",
+   t60:"Jusqu'à 1 heure", t120:"Jusqu'à 2 heures", t180:"Jusqu'à 3 heures", tany:"Toutes distances, vols compris", allC:"Tous les pays",
+   fShort:"Marchés de courte durée", fTrain:"Accessible en train ou en bus", fIndoor:"Couvert / à l'abri de la pluie",
+   open1:"ouvert", openN:"ouverts", none:"Aucun marché ce jour-là avec ces filtres.", nextOpen:"Prochain jour avec des marchés :", widen:"Toutes distances",
+   calTitle:"Calendrier", calLegend:"Le chiffre indique combien de marchés sont ouverts ce jour-là avec vos filtres. Les étiquettes dorées signalent les marchés de courte durée, les plus faciles à manquer. Touchez un jour pour les voir.",
+   prev:"Mois précédent", next:"Mois suivant", fromLux:"de Luxembourg-Ville", hours:"Horaires", eat:"À manger et à boire", official:"Infos", dirs:"Carte", cal:"Agenda", share:"WhatsApp", calLong:"Ajouter à Google Agenda", shareLong:"Partager sur WhatsApp", officialLong:"Page officielle (nouvel onglet)",
+   tbc:"Date à confirmer", tickets:"Billets", noDogs:"Chiens interdits", dogsOk:"Chiens acceptés", indoor:"Couvert", train:"En train/bus", visited:"Paula y est allée", watch:"Voir le reel", daily:"tous les jours", hoursTbc:"Horaires pas encore publiés",
+   weekendOf:"Week-end du", sat:"Sam.", sun:"Dim.", both:"Sam. et dim.", satOnly:"Samedi seulement", sunOnly:"Dimanche seulement",
+   sugTitle:"Un marché à proposer ?", sugText:"Vous connaissez un petit marché de village qui a sa place ici ? Racontez-moi. Chaque suggestion est vérifiée avant d'apparaître sur la page.", sugHow:"Remplissez ce que vous savez, copiez le texte et envoyez-le-moi en message sur Instagram.",
+   sName:"Nom du marché", sTown:"Ville et pays", sDates:"Dates (si vous les connaissez)", sWhy:"Qu'a-t-il de spécial ? Qu'y manger ?", sCopy:"Copier ma suggestion", sIg:"Ouvrir Instagram",
+   copied:"Copié. Collez-le dans un message à @the.traveling.taste sur Instagram.", copyFail:"Votre navigateur a bloqué la copie. Sélectionnez le texte ci-dessous et copiez-le.", needName:"Ajoutez d'abord le nom du marché.",
+   disclaimer:"Dates et horaires issus de sources officielles et locales. Les petits marchés changent parfois leurs plans : vérifiez le lien officiel avant de partir. Dernière mise à jour : ",
+   short:{"One day only":"Un seul jour","One weekend":"Un week-end","Two weekends":"Deux week-ends","Weekends only":"Week-ends seulement","Long weekends only":"Longs week-ends seulement"} },
+ de: { titleEm:"Weihnachtsmärkte", routesTitle:"Wochenend-Routen", routesSub:"Nahe Märkte an einem Wochenende kombiniert, mit Übernachtungstipp.", seeWeekend:"Dieses Wochenende zeigen", groupShort:"Nur wenige Tage", groupShortSub:"Ein Tag, ein Wochenende oder kurze Laufzeit. Danach planen.", groupSeason:"Die ganze Saison geöffnet", groupSeasonSub:"Mehrere Wochen geöffnet, also auch beim nächsten Mal noch da.", sugText2:"Du kennst einen charmanten Weihnachtsmarkt, der hierher gehört? Schick ihn über das Formular. Jeder Vorschlag wird geprüft, bevor er auf die Seite kommt.", sugBtn:"Markt vorschlagen", sugBtnIg:"Schreib mir auf Instagram", eyebrow:"Advent 2026 · rund um Luxemburg", title:"Welche Weihnachtsmärkte haben geöffnet?", lede:"Charmante Weihnachtsmärkte wenige Stunden von Luxemburg entfernt, dazu einige, für die sich die Reise lohnt, ausgewählt nach Atmosphäre und Essen. Wähle einen Tag und sieh alle, die geöffnet haben.",
+   today:"Heute", weekend:"Dieses Wochenende", nextweekend:"Nächstes Wochenende", pickDate:"Oder Datum wählen", travel:"Fahrzeit ab Luxemburg-Stadt", country:"Land", filters:"Filter",
+   t60:"Bis 1 Stunde", t120:"Bis 2 Stunden", t180:"Bis 3 Stunden", tany:"Jede Entfernung, mit Flügen", allC:"Alle Länder",
+   fShort:"Nur kurze Märkte", fTrain:"Mit Zug oder Bus erreichbar", fIndoor:"Überdacht / regensicher",
+   open1:"geöffnet", openN:"geöffnet", none:"An diesem Tag passt kein Markt zu diesen Filtern.", nextOpen:"Nächster Tag mit Märkten:", widen:"Jede Entfernung zeigen",
+   calTitle:"Kalender", calLegend:"Die Zahl zeigt, wie viele Märkte an dem Tag mit deinen Filtern geöffnet haben. Goldene Etiketten sind kurze Märkte, die man leicht verpasst. Tippe auf einen Tag.",
+   prev:"Voriger Monat", next:"Nächster Monat", fromLux:"ab Luxemburg-Stadt", hours:"Öffnungszeiten", eat:"Essen & Trinken", official:"Infos", dirs:"Karte", cal:"Kalender", share:"WhatsApp", calLong:"Zu Google Kalender hinzufügen", shareLong:"Per WhatsApp teilen", officialLong:"Offizielle Seite (neuer Tab)",
+   tbc:"Datum unbestätigt", tickets:"Tickets", noDogs:"Keine Hunde", dogsOk:"Hunde willkommen", indoor:"Überdacht", train:"Mit Zug/Bus", visited:"Paula war da", watch:"Zum Reel", daily:"täglich", hoursTbc:"Öffnungszeiten noch nicht veröffentlicht",
+   weekendOf:"Wochenende vom", sat:"Sa", sun:"So", both:"Sa & So", satOnly:"Nur Samstag", sunOnly:"Nur Sonntag",
+   sugTitle:"Einen Markt vorschlagen?", sugText:"Du kennst einen kleinen Dorfmarkt, der hierher gehört? Erzähl mir davon. Jeder Vorschlag wird geprüft, bevor er auf die Seite kommt.", sugHow:"Trag ein, was du weißt, kopiere den Text und schick ihn mir als Nachricht auf Instagram.",
+   sName:"Name des Markts", sTown:"Ort und Land", sDates:"Termine (falls bekannt)", sWhy:"Was ist besonders? Was sollte man dort essen?", sCopy:"Vorschlag kopieren", sIg:"Instagram öffnen",
+   copied:"Kopiert. Füge es in eine Nachricht an @the.traveling.taste auf Instagram ein.", copyFail:"Dein Browser hat das Kopieren blockiert. Markiere den Text unten und kopiere ihn.", needName:"Bitte zuerst den Namen des Markts eintragen.",
+   disclaimer:"Termine und Zeiten stammen aus offiziellen und lokalen Quellen. Kleine Märkte ändern manchmal ihre Pläne: vor dem Besuch bitte den offiziellen Link prüfen. Zuletzt aktualisiert: ",
+   short:{"One day only":"Nur ein Tag","One weekend":"Ein Wochenende","Two weekends":"Zwei Wochenenden","Weekends only":"Nur am Wochenende","Long weekends only":"Nur lange Wochenenden"} }
+};
+const COUNTRIES = {
+ Luxembourg:{en:"Luxembourg",pt:"Luxemburgo",fr:"Luxembourg",de:"Luxemburg"}, Germany:{en:"Germany",pt:"Alemanha",fr:"Allemagne",de:"Deutschland"},
+ France:{en:"France",pt:"França",fr:"France",de:"Frankreich"}, Belgium:{en:"Belgium",pt:"Bélgica",fr:"Belgique",de:"Belgien"},
+ Netherlands:{en:"Netherlands",pt:"Holanda",fr:"Pays-Bas",de:"Niederlande"}, Switzerland:{en:"Switzerland",pt:"Suíça",fr:"Suisse",de:"Schweiz"},
+ Austria:{en:"Austria",pt:"Áustria",fr:"Autriche",de:"Österreich"}, Estonia:{en:"Estonia",pt:"Estônia",fr:"Estonie",de:"Estland"}
+};
+const FLAGS = {
+ Luxembourg: [["h"], "#ED2939", "#FFFFFF", "#00A1DE"], Germany: [["h"], "#000000", "#DD0000", "#FFCE00"],
+ France: [["v"], "#0055A4", "#FFFFFF", "#EF4135"], Belgium: [["v"], "#000000", "#FDDA24", "#EF3340"],
+ Netherlands: [["h"], "#AE1C28", "#FFFFFF", "#21468B"], Austria: [["h"], "#ED2939", "#FFFFFF", "#ED2939"],
+ Estonia: [["h"], "#0072CE", "#000000", "#FFFFFF"]
+};
+function flag(country) {
+  const label = esc((COUNTRIES[country] || {})[state.lang] || country);
+  if (country === "Switzerland") return '<svg class="flag" viewBox="0 0 24 16" role="img" aria-label="' + label + '"><rect width="24" height="16" fill="#DA291C"/><rect x="10.5" y="3.5" width="3" height="9" fill="#fff"/><rect x="7.5" y="6.5" width="9" height="3" fill="#fff"/></svg>';
+  const f = FLAGS[country]; if (!f) return "";
+  const [dir, a, b, c] = [f[0][0], f[1], f[2], f[3]];
+  const r = dir === "h"
+    ? '<rect width="24" height="5.34" fill="' + a + '"/><rect y="5.33" width="24" height="5.34" fill="' + b + '"/><rect y="10.66" width="24" height="5.34" fill="' + c + '"/>'
+    : '<rect width="8.01" height="16" fill="' + a + '"/><rect x="8" width="8.01" height="16" fill="' + b + '"/><rect x="16" width="8" height="16" fill="' + c + '"/>';
+  return '<svg class="flag" viewBox="0 0 24 16" role="img" aria-label="' + label + '">' + r + "</svg>";
+}
+const LOCALE = {en:"en-GB", pt:"pt-BR", fr:"fr-FR", de:"de-DE"};
+
+/* ---------- date helpers (all dates are plain YYYY-MM-DD, no time zones) ---------- */
+const pad = n => String(n).padStart(2, "0");
+const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return iso(d); };
+const DOW = {sun:0, mon:1, tue:2, wed:3, thu:4, fri:5, sat:6};
+
+function prep(m) {
+  m.periods = String(m.open_periods || "").split(";").map(p => p.trim()).filter(Boolean).map(p => {
+    const [a, b] = p.split(/\s+to\s+/); return [a, b || a];
+  });
+  const od = String(m.open_days || "Daily").toLowerCase();
+  m.dows = od.startsWith("daily") ? null : new Set(od.split(/[,\s]+/).map(x => DOW[x.slice(0, 3)]).filter(x => x !== undefined));
+  m.closed = new Set(String(m.closed_dates || "").split(";").map(s => s.trim()).filter(Boolean));
+  m.first = m.periods.length ? m.periods[0][0] : "";
+  m.last = m.periods.length ? m.periods[m.periods.length - 1][1] : "";
+  m.travel = m.travel_min === "" || m.travel_min == null ? null : Number(m.travel_min);
+  return m;
+}
+const DATA = MARKETS.filter(m => String(m.show_on_site || "Yes").toLowerCase() !== "no").map(prep);
+
+function isOpen(m, day) {
+  if (m.closed.has(day)) return false;
+  if (m.dows && !m.dows.has(parse(day).getDay())) return false;
+  return m.periods.some(([a, b]) => day >= a && day <= b);
+}
+
+/* ---------- state ---------- */
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+const browserLang = (navigator.language || "en").slice(0, 2);
+const state = {
+  lang: T[store.get("lang")] ? store.get("lang") : (T[browserLang] ? browserLang : "en"),
+  mode: "day", days: [], quick: null,
+  travel: "180", country: "", short: false, train: false, indoor: false,
+  month: null
+};
+const t = k => T[state.lang][k] ?? T.en[k] ?? k;
+const loc = (m, field) => m[field + "_" + state.lang] || m[field + "_en"] || "";
+
+function todayIso() { return iso(new Date()); }
+function weekendFrom(day, skip) {
+  const d = parse(day); let dow = d.getDay();
+  let toSat = (6 - dow + 7) % 7; if (dow === 0) toSat = -1;   // Sunday belongs to the current weekend
+  const sat = addDays(day, toSat + (skip ? 7 : 0));
+  return [sat, addDays(sat, 1)];
+}
+
+function passesFilters(m) {
+  if (state.travel !== "any" && (m.travel === null || m.travel > Number(state.travel))) return false;
+  if (state.country && m.country !== state.country) return false;
+  if (state.short && !m.short_run) return false;
+  if (state.train && !String(m.by_public_transport).toLowerCase().startsWith("yes")) return false;
+  if (state.indoor && String(m.indoor).toLowerCase() !== "yes") return false;
+  return true;
+}
+
+/* ---------- formatting ---------- */
+function fmtDay(day, opts) { return new Intl.DateTimeFormat(LOCALE[state.lang], opts).format(parse(day)); }
+function fmtRange(a, b) {
+  const da = parse(a), db = parse(b);
+  if (a === b) return fmtDay(a, {day: "numeric", month: "short"});
+  const sameMonth = da.getMonth() === db.getMonth() && da.getFullYear() === db.getFullYear();
+  return (sameMonth ? fmtDay(a, {day: "numeric"}) : fmtDay(a, {day: "numeric", month: "short"})) + "–" + fmtDay(b, {day: "numeric", month: "short"});
+}
+function datesSummary(m) {
+  let s = m.periods.map(([a, b]) => fmtRange(a, b)).join(" · ");
+  if (m.dows) {
+    const names = [...m.dows].sort((x, y) => ((x + 6) % 7) - ((y + 6) % 7)).map(n => new Intl.DateTimeFormat(LOCALE[state.lang], {weekday: "short"}).format(new Date(2026, 10, 1 + n)));
+    s += " (" + names.join(", ") + ")";
+  }
+  return s;
+}
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function safeUrl(u) { return /^https?:\/\//i.test(String(u || "")) ? String(u) : ""; }
+
+/* ---------- rendering ---------- */
+function setStatic() {
+  document.documentElement.lang = state.lang;
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
+  document.querySelectorAll("#langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)));
+  const tr = document.getElementById("f-travel");
+  ["t60", "t120", "t180", "tany"].forEach((k, i) => { tr.options[i].textContent = t(k); });
+  const cs = document.getElementById("f-country");
+  const names = [...new Set(DATA.map(m => m.country))];
+  cs.innerHTML = '<option value="">' + esc(t("allC")) + "</option>" + names.map(c => '<option value="' + esc(c) + '">' + esc((COUNTRIES[c] || {})[state.lang] || c) + "</option>").join("");
+  cs.value = state.country;
+  document.getElementById("cal-prev").textContent = "‹ " + t("prev");
+  document.getElementById("cal-next").textContent = t("next") + " ›";
+  document.getElementById("cal-h").textContent = t("calTitle");
+  document.querySelector(".disclaimer, [data-t=disclaimer]").textContent = t("disclaimer") + fmtDay(UPDATED, {day: "numeric", month: "long", year: "numeric"});
+  document.getElementById("ig-foot").href = INSTAGRAM_URL;
+  document.getElementById("ig-head").href = INSTAGRAM_URL;
+  const h1 = document.getElementById("h1"), title = t("title"), em = t("titleEm"), at = title.indexOf(em);
+  h1.innerHTML = at < 0 ? esc(title) : esc(title.slice(0, at)) + "<em>" + esc(em) + "</em>" + esc(title.slice(at + em.length));
+  document.querySelector("[data-t=sugText]").textContent = t("sugText2");
+  const sb = document.getElementById("sug-btn");
+  sb.href = FORM_URL || INSTAGRAM_URL; sb.textContent = FORM_URL ? t("sugBtn") : t("sugBtnIg");
+  document.querySelectorAll("#quick button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.q === state.quick)));
+}
+
+function card(m) {
+  const tags = [];
+  if (m.short_run) tags.push('<span class="badge short">' + esc(T[state.lang].short[m.short_run] || m.short_run) + "</span>");
+  if (state.days.length > 1) {
+    const openDays = state.days.filter(d => isOpen(m, d));
+    if (openDays.length < state.days.length) tags.push('<span class="badge">' + esc(openDays.map(d => fmtDay(d, {weekday: "short"})).join(", ")) + "</span>");
+  }
+  if (String(m.date_status).toLowerCase().startsWith("to confirm")) tags.push('<span class="badge warn">' + esc(t("tbc")) + "</span>");
+  if (String(m.by_public_transport).toLowerCase().startsWith("yes")) tags.push('<span class="badge go">' + esc(t("train")) + "</span>");
+  if (String(m.indoor).toLowerCase() === "yes") tags.push('<span class="badge go">' + esc(t("indoor")) + "</span>");
+  if (m.tickets && !/free/i.test(m.tickets)) tags.push('<span class="badge">' + esc(t("tickets")) + ": " + esc(m.tickets.replace(/^Entry\s*/i, "")) + "</span>");
+  if (String(m.dogs).toLowerCase() === "no") tags.push('<span class="badge no">' + esc(t("noDogs")) + "</span>");
+  if (String(m.dogs).toLowerCase() === "yes") tags.push('<span class="badge go">' + esc(t("dogsOk")) + "</span>");
+  if (String(m.paula_visited).toLowerCase() === "yes") tags.push('<span class="badge visited">' + esc(t("visited")) + "</span>");
+
+  const country = (COUNTRIES[m.country] || {})[state.lang] || m.country;
+  const travel = m.travel === null ? esc(m.travel_text) : m.travel === 0 ? "" : esc(m.travel_text) + " " + esc(t("fromLux"));
+  const food = loc(m, "food");
+  const link = safeUrl(m.link);
+  const where = m.address ? m.address + ", " + m.town : m.town + ", " + m.country;
+  const maps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(m.address ? where : (m.lat + "," + m.lng));
+  const day = state.days.find(d => isOpen(m, d)) || state.days[0];
+  const gcal = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(m.name) +
+    "&dates=" + day.replace(/-/g, "") + "/" + addDays(day, 1).replace(/-/g, "") +
+    "&location=" + encodeURIComponent(where) + "&details=" + encodeURIComponent((m.hours ? m.hours + "\n" : "") + (link || ""));
+  const wa = "https://wa.me/?text=" + encodeURIComponent(m.name + " · " + fmtDay(day, {weekday: "long", day: "numeric", month: "long"}) + (link ? "\n" + link : ""));
+  const reel = safeUrl(m.instagram_link);
+  const stamp = m.short_run ? '<div class="stamp" aria-hidden="true"><b>' + parse(day).getDate() + "</b><span>" + esc(fmtDay(day, {month: "short"}).replace(".", "")) + "</span></div>" : "";
+  return '<article class="card ' + (m.short_run ? "is-short" : "is-season") + '" id="m-' + esc(m.id) + '">' +
+    '<div class="card-top"><div><h3>' + esc(m.name) + "</h3>" +
+    '<p class="meta">' + flag(m.country) + "<span>" + esc(m.town) + " · " + esc(country) + (travel ? " · " + travel : "") + "</span></p></div>" + stamp + "</div>" +
+    '<p class="when"><strong>' + esc(datesSummary(m)) + "</strong><br>" + esc(t("hours")) + ": " + esc(m.hours || t("hoursTbc")) + "</p>" +
+    (tags.length ? '<div class="badges">' + tags.join("") + "</div>" : "") +
+    (loc(m, "highlight") ? '<p class="why">' + esc(loc(m, "highlight")) + "</p>" : "") +
+    (food ? '<div class="food"><b>' + esc(t("eat")) + "</b>" + esc(food) + "</div>" : "") +
+    (m.address ? '<p class="addr">' + esc(m.address) + "</p>" : "") +
+    (reel ? '<a href="' + esc(reel) + '" target="_blank" rel="noopener">' + esc(t("watch")) + "</a>" : "") +
+    '<div class="actions">' +
+      (link ? '<a class="btn primary" href="' + esc(link) + '" target="_blank" rel="noopener" aria-label="' + esc(m.name + ": " + t("officialLong")) + '">' + esc(t("official")) + "</a>" : "") +
+      '<a class="btn" href="' + esc(gcal) + '" target="_blank" rel="noopener" aria-label="' + esc(t("calLong")) + '">' + esc(t("cal")) + "</a>" +
+      '<a class="btn" href="' + esc(maps) + '" target="_blank" rel="noopener">' + esc(t("dirs")) + "</a>" +
+      '<a class="btn" href="' + esc(wa) + '" target="_blank" rel="noopener" aria-label="' + esc(t("shareLong")) + '">' + esc(t("share")) + "</a>" +
+    "</div></article>";
+}
+
+function openOn(days) { return DATA.filter(m => passesFilters(m) && days.some(d => isOpen(m, d))); }
+
+function nextDayWithMarkets(from) {
+  for (let i = 1; i < 120; i++) { const d = addDays(from, i); if (openOn([d]).length) return d; }
+  return null;
+}
+
+function renderResults() {
+  const h = document.getElementById("res-h"), c = document.getElementById("res-count"), box = document.getElementById("results");
+  const days = state.days;
+  h.textContent = state.mode === "weekend"
+    ? t("weekendOf") + " " + fmtRange(days[0], days[days.length - 1])
+    : fmtDay(days[0], {weekday: "long", day: "numeric", month: "long"});
+  const list = openOn(days).sort((a, b) => (a.travel ?? 9999) - (b.travel ?? 9999) || a.name.localeCompare(b.name));
+  c.textContent = list.length + " " + (list.length === 1 ? t("open1") : t("openN"));
+  if (!list.length) {
+    const nd = nextDayWithMarkets(days[days.length - 1]);
+    box.innerHTML = '<div class="empty"><p>' + esc(t("none")) + "</p>" +
+      (nd ? '<button type="button" class="btn primary" data-goto="' + nd + '">' + esc(t("nextOpen") + " " + fmtDay(nd, {weekday: "short", day: "numeric", month: "short"})) + "</button>" : "") +
+      (state.travel !== "any" ? '<button type="button" class="btn" data-widen="1">' + esc(t("widen")) + "</button>" : "") + "</div>";
+    return;
+  }
+  const shortL = list.filter(m => m.short_run), season = list.filter(m => !m.short_run);
+  const group = (cls, title, sub, items) => items.length ? '<div class="group"><div class="group-h ' + cls + '"><h3>' + esc(title) + " · " + items.length + "</h3><p>" + esc(sub) + '</p></div><div class="grid">' + items.map(card).join("") + "</div></div>" : "";
+  box.innerHTML = group("short", t("groupShort"), t("groupShortSub"), shortL) + group("season", t("groupSeason"), t("groupSeasonSub"), season);
+}
+
+function renderCalendar() {
+  const [y, mo] = state.month;
+  const cal = document.getElementById("cal");
+  const first = new Date(y, mo, 1), daysIn = new Date(y, mo + 1, 0).getDate();
+  const lead = (first.getDay() + 6) % 7;
+  const head = Array.from({length: 7}, (_, i) => '<div class="dow">' + esc(new Intl.DateTimeFormat(LOCALE[state.lang], {weekday: "short"}).format(new Date(2026, 10, 2 + i))) + "</div>").join("");
+  let cells = "";
+  for (let i = 0; i < lead; i++) cells += '<div class="day out" aria-hidden="true"></div>';
+  for (let d = 1; d <= daysIn; d++) {
+    const day = y + "-" + pad(mo + 1) + "-" + pad(d);
+    const open = openOn([day]);
+    const shortOnes = open.filter(m => m.short_run).sort((a, b) => (a.travel ?? 9999) - (b.travel ?? 9999));
+    const tags = shortOnes.slice(0, 2).map(m => '<span class="tag">' + esc(m.town) + "</span>").join("") +
+      (shortOnes.length > 2 ? '<span class="tag">+' + (shortOnes.length - 2) + "</span>" : "");
+    const sel = state.days.includes(day);
+    cells += '<button type="button" class="day' + (open.length ? "" : " none") + '" data-day="' + day + '" aria-pressed="' + sel + '" aria-label="' +
+      esc(fmtDay(day, {weekday: "long", day: "numeric", month: "long"}) + ": " + open.length + " " + (open.length === 1 ? t("open1") : t("openN"))) + '">' +
+      '<span class="n">' + d + (open.length ? "<small>" + open.length + "</small>" : "") + "</span>" + tags + "</button>";
+  }
+  cal.innerHTML = head + cells;
+  document.getElementById("cal-h").textContent = new Intl.DateTimeFormat(LOCALE[state.lang], {month: "long", year: "numeric"}).format(first);
+  document.getElementById("cal-prev").disabled = (y === 2026 && mo <= 10);
+  document.getElementById("cal-next").disabled = (y === 2027 && mo >= 0);
+}
+
+const BY_ID = Object.fromEntries(DATA.map(m => [m.id, m]));
+function renderRoutes() {
+  const today = todayIso();
+  document.getElementById("routes").innerHTML = ROUTES.filter(r => String(r.show_on_site || "Yes").toLowerCase() !== "no").map(r => {
+    const stops = String(r.markets).split(",").map(x => BY_ID[x.trim()]).filter(Boolean);
+    const title = r["title_" + state.lang] || r.title_en, plan = r["plan_" + state.lang] || r.plan_en, base = r["base_" + state.lang] || r.base_en;
+    return '<article class="route' + (r.end < today ? " past" : "") + '">' +
+      '<p class="rwhen">' + esc(fmtRange(r.start, r.end)) + "</p><h3>" + esc(title) + "</h3><p>" + esc(plan) + "</p>" +
+      '<div class="stops">' + stops.map(m => '<span class="stop">' + flag(m.country) + esc(m.town) + "</span>").join("") + "</div>" +
+      (base ? '<p class="base">' + esc(base) + "</p>" : "") +
+      '<div><button type="button" class="btn green" data-route="' + esc(r.id) + '">' + esc(t("seeWeekend")) + "</button></div></article>";
+  }).join("");
+}
+function render() { setStatic(); renderResults(); renderRoutes(); renderCalendar(); }
+function selectRange(a, b) {
+  const days = []; for (let d = a; d <= b; d = addDays(d, 1)) days.push(d);
+  state.mode = "weekend"; state.days = days; state.quick = null;
+  document.getElementById("f-date").value = "";
+  const d = parse(a); state.month = [d.getFullYear(), d.getMonth()];
+  render();
+}
+
+function selectDay(day) {
+  state.mode = "day"; state.days = [day]; state.quick = day === todayIso() ? "today" : null;
+  document.getElementById("f-date").value = day;
+  const d = parse(day); state.month = [d.getFullYear(), d.getMonth()];
+  render();
+}
+function selectWeekend(skip) {
+  state.mode = "weekend"; state.days = weekendFrom(todayIso(), skip); state.quick = skip ? "nextweekend" : "weekend";
+  document.getElementById("f-date").value = "";
+  const d = parse(state.days[0]); state.month = [d.getFullYear(), d.getMonth()];
+  render();
+}
+
+/* ---------- events ---------- */
+document.getElementById("langs").addEventListener("click", e => {
+  const b = e.target.closest("button[data-lang]"); if (!b) return;
+  state.lang = b.dataset.lang; store.set("lang", state.lang); render();
+});
+document.getElementById("quick").addEventListener("click", e => {
+  const b = e.target.closest("button[data-q]"); if (!b) return;
+  if (b.dataset.q === "today") selectDay(todayIso()); else selectWeekend(b.dataset.q === "nextweekend");
+});
+document.getElementById("f-date").addEventListener("change", e => { if (e.target.value) selectDay(e.target.value); });
+document.getElementById("f-travel").addEventListener("change", e => { state.travel = e.target.value; render(); });
+document.getElementById("f-country").addEventListener("change", e => { state.country = e.target.value; render(); });
+["short", "train", "indoor"].forEach(k => document.getElementById("f-" + k).addEventListener("change", e => { state[k] = e.target.checked; render(); }));
+document.getElementById("results").addEventListener("click", e => {
+  const g = e.target.closest("[data-goto]"); if (g) { selectDay(g.dataset.goto); return; }
+  if (e.target.closest("[data-widen]")) { state.travel = "any"; document.getElementById("f-travel").value = "any"; render(); }
+});
+document.getElementById("cal").addEventListener("click", e => {
+  const b = e.target.closest("button[data-day]"); if (!b) return;
+  selectDay(b.dataset.day);
+  document.getElementById("res-h").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
+});
+document.getElementById("routes").addEventListener("click", e => {
+  const b = e.target.closest("button[data-route]"); if (!b) return;
+  const r = ROUTES.find(x => x.id === b.dataset.route); if (!r) return;
+  state.travel = "any"; document.getElementById("f-travel").value = "any";
+  selectRange(r.start, r.end);
+  document.getElementById("res-h").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
+});
+document.getElementById("cal-prev").addEventListener("click", () => { let [y, m] = state.month; m--; if (m < 0) { m = 11; y--; } state.month = [y, m]; renderCalendar(); });
+document.getElementById("cal-next").addEventListener("click", () => { let [y, m] = state.month; m++; if (m > 11) { m = 0; y++; } state.month = [y, m]; renderCalendar(); });
+/* ---------- start: today if anything is open, otherwise the next day with markets ---------- */
+(function start() {
+  const today = todayIso();
+  const firstDay = openOn([today]).length ? today : (nextDayWithMarkets(today) || today);
+  selectDay(firstDay);
+})();
+</script>
+
+</body></html>
