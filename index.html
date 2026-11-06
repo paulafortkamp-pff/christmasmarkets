@@ -50,10 +50,17 @@ h1 em { font-style: italic; color: #FF6170; }
 .chip { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; font: 500 15px var(--body); cursor: pointer; min-height: 44px; }
 .chip:hover { border-color: var(--green); }
 .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: var(--on-accent); font-weight: 600; }
-.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 12px; }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .field label { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
-input, select { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font: 16px var(--body); width: 100%; }
+input, select { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font: 16px var(--body); width: 100%; min-width: 0; max-width: 100%; }
+/* iOS Safari gives date inputs an intrinsic min width that ignores width:100%,
+   so the field spilled past the panel (portrait) and over the next field (landscape). */
+input[type="date"] { display: block; min-height: 48px; }
+@supports (-webkit-touch-callout: none) {
+  input[type="date"] { -webkit-appearance: none; appearance: none; line-height: 22px; }
+  input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+}
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .checks { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; }
 .checks label { display: flex; gap: 8px; align-items: center; font-size: 15px; cursor: pointer; min-height: 32px; }
